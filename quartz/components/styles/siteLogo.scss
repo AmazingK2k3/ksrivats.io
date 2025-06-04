@@ -1,0 +1,70 @@
+.site-logo-container {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 100;
+  animation: logoFadeIn 1s ease-out;
+
+  .logo-link {
+    display: block;
+    background: none;
+    border: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 4px 8px rgba(70, 16, 49, 0.2));
+    }
+    
+    .site-logo {
+      width: 120px;
+      height: auto;
+      transition: all 0.3s ease;
+      
+      &.light-logo {
+        display: block;
+      }
+      
+      &.dark-logo {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    top: 1rem;
+    left: 1rem;
+    
+    .logo-link .site-logo {
+      width: 80px;
+    }
+  }
+}
+
+// Dark mode handling
+:root[saved-theme="dark"] {
+  .site-logo-container {
+    .logo-link {
+      .site-logo {
+        &.light-logo {
+          display: none;
+        }
+        
+        &.dark-logo {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+@keyframes logoFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
