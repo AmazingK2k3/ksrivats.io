@@ -1,0 +1,52 @@
+# Quartz specific
+.DS_Store
+node_modules/
+public/
+prof
+tsconfig.tsbuildinfo
+.obsidian
+.quartz-cache
+private/
+
+# Showcase specific  
+showcase-project/node_modules/
+showcase-project/.env
+showcase-project/dist/
+
+# Development environments
+.replit
+replit.nix
+
+# Common ignores
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+out/
+
+# Dependency directories
+**/node_modules/
+
+# Optional npm cache directory
+.npm
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity

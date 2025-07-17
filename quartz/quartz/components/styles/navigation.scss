@@ -1,0 +1,101 @@
+.main-navigation {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+
+  .nav-list {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+  }
+
+  .nav-item {
+    opacity: 0;
+    animation: navFadeIn 0.6s ease-out forwards;
+  }
+
+  .nav-link {
+    font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: var(--darkgray);
+    text-decoration: none;
+    background: none;
+    padding: 0.5rem 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+    border-radius: 20px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--secondary);
+      transition: all 0.3s ease;
+      transform: translateX(-50%);
+    }
+
+    &:hover {
+      color: var(--secondary);
+      background: rgba(70, 16, 49, 0.08);
+      transform: translateY(-1px);
+      
+      &::after {
+        width: 80%;
+      }
+    }
+  }
+
+  .nav-darkmode {
+    display: inline-block;
+    margin-right: 1.5rem;
+    vertical-align: middle;
+  }
+
+  @media screen and (max-width: 768px) {
+    top: 1rem;
+    right: 1rem;
+    
+    .nav-list {
+      gap: 0.8rem;
+    }
+    
+    .nav-link {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin: 2rem 0;
+    
+    .nav-list {
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+  }
+}
+
+@keyframes navFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
