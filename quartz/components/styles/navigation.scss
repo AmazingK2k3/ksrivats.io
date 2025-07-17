@@ -2,7 +2,7 @@
   position: fixed;
   top: 1.5rem;
   right: 1.5rem;
-  z-index: 100;
+  z-index: 200;
 
   .nav-list {
     display: flex;
@@ -53,6 +53,12 @@
         width: 80%;
       }
     }
+  }
+
+  .nav-darkmode {
+    display: inline-block;
+    margin-right: 1.5rem;
+    vertical-align: middle;
   }
 
   @media screen and (max-width: 768px) {

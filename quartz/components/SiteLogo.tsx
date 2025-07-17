@@ -8,14 +8,14 @@ const SiteLogo: QuartzComponent = ({ fileData }: QuartzComponentProps) => {
     <div class="site-logo-container">
       <a href={baseDir} class="logo-link">
         <img 
-          src={`${baseDir}static/logo.svg`} 
+          src="/static/logo.svg" 
           alt="Kaushik Srivatsan Logo" 
-          class="site-logo light-logo" 
+          class="site-logo light-logo" style={{height: '48px', width: 'auto'}}
         />
         <img 
-          src={`${baseDir}static/logo_dark.svg`} 
+          src="/static/logo_dark.svg" 
           alt="Kaushik Srivatsan Logo" 
-          class="site-logo dark-logo" 
+          class="site-logo dark-logo" style={{height: '48px', width: 'auto'}}
         />
       </a>
     </div>
