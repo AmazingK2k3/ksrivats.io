@@ -1,4 +1,4 @@
-# Kaushik Srivatsan's Portfolio Repository
+# My Portfolio Repository
 
 This repository contains two main components of my digital portfolio:
 
@@ -62,10 +62,6 @@ npm run build
 └── README.md                  # This file
 ```
 
-## 🔗 Live Sites
-
-- **Quartz Blog**: [ksrivats.io](https://ksrivats.io) *(Static site)*
-- **Portfolio Showcase**: [portfolio.ksrivats.io](https://portfolio.ksrivats.io) *(Interactive app)*
 
 ## 🛠️ Technologies Used
 
@@ -95,20 +91,6 @@ npm run build
 2. Update the content management system
 3. Run `npm run build` in showcase directory
 
-## 🚢 Deployment
-
-Both components can be deployed independently:
-
-- **Quartz**: Builds to static files, can be deployed to any static host
-- **Showcase**: Full-stack application, suitable for Vercel, Netlify, or similar platforms
-
-## 📬 Contact
-
-For questions about this repository or collaboration opportunities:
-
-- **Email**: contact@ksrivats.io
-- **LinkedIn**: [linkedin.com/in/kaushik-srivatsan](https://linkedin.com/in/kaushik-srivatsan)
-- **GitHub**: [@AmazingK2k3](https://github.com/AmazingK2k3)
 
 ---
 
