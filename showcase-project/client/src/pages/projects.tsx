@@ -26,6 +26,21 @@ interface Project {
   updatedAt: string;
 }
 
+// Simple and clean grid layout
+function FlexibleProjectsGrid({ projects }: { projects: Project[] }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {projects.map((project) => (
+        <ProjectCard 
+          key={project.id} 
+          project={project} 
+          size="medium"
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Projects() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
@@ -184,12 +199,8 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Projects Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project: Project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
-          </div>
+          {/* Flexible Projects Grid */}
+          <FlexibleProjectsGrid projects={filteredProjects} />
 
           {filteredProjects.length === 0 && (
             <div className="text-center py-16">
@@ -209,41 +220,138 @@ export default function Projects() {
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({ project, size = "medium" }: { project: Project; size?: "small" | "medium" | "large" | "compact" }) {
+  const getImageUrl = (coverPath?: string): string | undefined => {
+    if (!coverPath) {
+      return undefined;
+    }
+    // If it's already a full URL, return it as is
+    if (coverPath.startsWith('http://') || coverPath.startsWith('https://')) {
+      return coverPath;
+    }
+    // For local/relative paths, ensure it starts with a '/' to point to the public root
+    return coverPath.startsWith('/') ? coverPath : `/${coverPath}`;
+  };
+
+  const imageUrl = getImageUrl(project.cover);
+
+  // Size-based classes
+  const sizeClasses = {
+    small: {
+      card: "h-48",
+      image: "aspect-video",
+      title: "text-lg",
+      description: "text-sm line-clamp-2",
+      padding: "p-4"
+    },
+    medium: {
+      card: "h-full min-h-[300px]",
+      image: "aspect-video",
+      title: "text-xl",
+      description: "text-sm line-clamp-3",
+      padding: "p-6"
+    },
+    large: {
+      card: "h-full min-h-[400px]",
+      image: "aspect-video",
+      title: "text-xl",
+      description: "text-base line-clamp-3",
+      padding: "p-6"
+    },
+    compact: {
+      card: "h-auto min-h-[200px]",
+      image: "aspect-video",
+      title: "text-lg",
+      description: "text-sm line-clamp-2",
+      padding: "p-4"
+    }
+  };
+
+  const classes = sizeClasses[size];
+
   return (
-    <Card className="group hover:shadow-xl transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-          {project.status && (
-            <Badge variant="secondary" className="text-xs">
-              {project.status}
-            </Badge>
-          )}
-          <span className="flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
-            {project.updatedAt && format(new Date(project.updatedAt), "MMM d, yyyy")}
-          </span>
-        </div>
-
-        <h3 className="font-sans font-semibold text-xl mb-3 group-hover:text-primary transition-colors">
-          <Link href={`/projects/${project.slug}`}>{project.title}</Link>
-        </h3>
-
-        <p className="text-muted-foreground mb-4 line-clamp-3">
-          {project.description}
-        </p>
-
-        {project.tags && project.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {project.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                <Tag className="w-3 h-3 mr-1" />
-                {tag}
-              </Badge>
-            ))}
+    <Card className={`group hover:shadow-xl transition-all duration-300 overflow-hidden ${classes.card}`}>
+      {imageUrl ? (
+        // Layout with image
+        <div className="flex flex-col h-full">
+          {/* Image Section */}
+          <div className={`${classes.image} relative overflow-hidden bg-gradient-to-br from-primary/5 to-accent/5`}>
+            <img
+              src={imageUrl}
+              alt={`${project.title} cover`}
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
+            />
           </div>
-        )}
-      </CardContent>
+          
+          {/* Content Section */}
+          <CardContent className={`${classes.padding} flex-1 flex flex-col`}>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+              {project.status && (
+                <Badge variant="secondary" className="text-xs">
+                  {project.status}
+                </Badge>
+              )}
+              <span className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                {project.updatedAt && format(new Date(project.updatedAt), "MMM d, yyyy")}
+              </span>
+            </div>
+
+            <h3 className={`font-sans font-semibold ${classes.title} mb-3 group-hover:text-primary transition-colors flex-shrink-0`}>
+              <Link href={`/projects/${project.slug}`}>{project.title}</Link>
+            </h3>
+
+            <p className={`text-muted-foreground mb-4 ${classes.description} flex-1`}>
+              {project.description}
+            </p>
+
+            {project.tags && project.tags.length > 0 && size !== "small" && (
+              <div className="flex flex-wrap gap-1 mt-auto">
+                {project.tags.slice(0, size === "large" ? 4 : 3).map((tag) => (
+                  <Badge key={tag} variant="outline" className="text-xs">
+                    <Tag className="w-3 h-3 mr-1" />
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </div>
+      ) : (
+        // Layout without image - original compact design
+        <CardContent className={`${classes.padding} h-full flex flex-col`}>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
+            {project.status && (
+              <Badge variant="secondary" className="text-xs">
+                {project.status}
+              </Badge>
+            )}
+            <span className="flex items-center gap-1">
+              <Calendar className="w-3 h-3" />
+              {project.updatedAt && format(new Date(project.updatedAt), "MMM d, yyyy")}
+            </span>
+          </div>
+
+          <h3 className={`font-sans font-semibold ${classes.title} mb-3 group-hover:text-primary transition-colors`}>
+            <Link href={`/projects/${project.slug}`}>{project.title}</Link>
+          </h3>
+
+          <p className={`text-muted-foreground mb-4 ${classes.description} flex-1`}>
+            {project.description}
+          </p>
+
+          {project.tags && project.tags.length > 0 && size !== "small" && (
+            <div className="flex flex-wrap gap-1 mt-auto">
+              {project.tags.slice(0, size === "large" ? 4 : 3).map((tag) => (
+                <Badge key={tag} variant="outline" className="text-xs">
+                  <Tag className="w-3 h-3 mr-1" />
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      )}
     </Card>
   );
 }

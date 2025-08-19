@@ -31,17 +31,35 @@ export function Navigation() {
   const [location] = useLocation();
 
   const handleSearch = async (query: string) => {
-    // This will be implemented to search through posts and projects
-    const response = await fetch(`/api/posts/search?q=${encodeURIComponent(query)}`);
-    const posts = await response.json();
+    // Search through posts, projects, and creatives
+    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    const { posts, projects, creatives } = await response.json();
     
-    return posts.map((post: any) => ({
-      id: post.id.toString(),
-      title: post.title,
-      excerpt: post.excerpt || "",
-      url: `/blog/${post.slug}`,
-      type: 'post' as const,
-    }));
+    const searchResults = [
+      ...posts.map((post: any) => ({
+        id: `post-${post.id}`,
+        title: post.title,
+        excerpt: post.excerpt || "",
+        url: `/blog/${post.slug}`,
+        type: 'post' as const,
+      })),
+      ...projects.map((project: any) => ({
+        id: `project-${project.id}`,
+        title: project.title,
+        excerpt: project.description || "",
+        url: `/projects/${project.slug}`,
+        type: 'project' as const,
+      })),
+      ...creatives.map((creative: any) => ({
+        id: `creative-${creative.id}`,
+        title: creative.title,
+        excerpt: creative.description || "",
+        url: `/creatives/${creative.slug}`,
+        type: 'creative' as const,
+      }))
+    ];
+    
+    return searchResults;
   };
 
   return (
@@ -63,11 +81,12 @@ export function Navigation() {
                 key={item.name}
                 href={item.href}
                 className={cn(
-                  "text-foreground/70 hover:text-foreground transition-colors",
+                  "relative text-foreground/70 hover:text-foreground transition-colors group",
                   location === item.href && "text-foreground font-medium"
                 )}
               >
                 {item.name}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ease-out" />
               </Link>
             ))}
           </div>
@@ -75,7 +94,7 @@ export function Navigation() {
           {/* Search and Theme Toggle */}
           <div className="flex items-center space-x-4">
             <div className="hidden md:block">
-              <Search onSearch={handleSearch} placeholder="Search posts..." className="w-64" />
+              <Search onSearch={handleSearch} placeholder="Search content..." className="w-64" />
             </div>
             
             <Button
@@ -111,7 +130,7 @@ export function Navigation() {
         <div className="md:hidden bg-background/95 border-t border-border backdrop-blur-sm">
           <div className="px-4 py-4 space-y-4">
             {/* Mobile Search */}
-            <Search onSearch={handleSearch} placeholder="Search posts..." />
+            <Search onSearch={handleSearch} placeholder="Search content..." />
             
             {/* Mobile Navigation */}
             <div className="space-y-2">

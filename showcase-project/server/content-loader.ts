@@ -8,14 +8,14 @@ import type { Post, Project, InsertPost, InsertProject } from '@shared/schema';
 
 interface Creative {
   id: number;
-  title: string;
+  title?: string;
   slug: string;
-  description: string;
+  description?: string;
   content: string;
   tags: string[];
   category: string;
   featured: boolean;
-  cover?: string;
+  image?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,6 +52,14 @@ interface ParsedMarkdown {
 
 async function parseMarkdown(content: string): Promise<ParsedMarkdown> {
   const { data, content: markdownContent } = matter(content);
+  
+  // Debug zeitgeist specifically
+  if (data.title === "Zeitgeist Magazine") {
+    console.log(`Debug Zeitgeist - Raw content first 200 chars:`);
+    console.log(content.substring(0, 200));
+    console.log(`Debug Zeitgeist - Parsed data:`, data);
+    console.log(`Debug Zeitgeist - Cover field:`, data.cover);
+  }
   
   // Convert markdown to HTML
   const processedContent = await remark()
@@ -129,24 +137,40 @@ export async function loadProjects(): Promise<Project[]> {
   console.log(`Loading projects from: ${projectsPath}`);
   const markdownFiles = await loadMarkdownFiles(projectsPath);
   
-  const projects = markdownFiles.map((file, index) => ({
-    id: index + 1,
-    title: file.frontMatter.title,
-    slug: file.frontMatter.slug,
-    description: file.frontMatter.description || '',
-    content: file.htmlContent,
-    status: (file.frontMatter.status as ProjectStatus) || 'completed',
-    tags: file.frontMatter.tags || [],
-    tech: file.frontMatter.tech || [],
-    link: file.frontMatter.link || null,
-    github: file.frontMatter.github || null,
-    category: file.frontMatter.category || 'General',
-    featured: file.frontMatter.featured || false,
-    order: file.frontMatter.order || 0,
-    publishedAt: new Date(file.frontMatter.date),
-    createdAt: new Date(file.frontMatter.date),
-    updatedAt: new Date(file.frontMatter.date),
-  }));
+  const projects = markdownFiles.map((file, index) => {
+    // Debug logging for each file
+    if (file.frontMatter.title === "Zeitgeist Magazine") {
+      console.log(`Zeitgeist frontMatter.cover: ${file.frontMatter.cover}`);
+      console.log(`Zeitgeist frontMatter.image: ${file.frontMatter.image}`);
+    }
+    
+    return {
+      id: index + 1,
+      title: file.frontMatter.title,
+      slug: file.frontMatter.slug,
+      description: file.frontMatter.description || '',
+      content: file.htmlContent,
+      status: (file.frontMatter.status as ProjectStatus) || 'completed',
+      tags: file.frontMatter.tags || [],
+      tech: file.frontMatter.tech || [],
+      link: file.frontMatter.link || null,
+      github: file.frontMatter.github || null,
+      category: file.frontMatter.category || 'General',
+      featured: file.frontMatter.featured || false,
+      cover: file.frontMatter.cover || file.frontMatter.image || null,
+      order: file.frontMatter.order || 0,
+      publishedAt: new Date(file.frontMatter.date),
+      createdAt: new Date(file.frontMatter.date),
+      updatedAt: new Date(file.frontMatter.date),
+    };
+  });
+
+  // Debug logging for cover fields
+  projects.forEach(project => {
+    if (project.cover) {
+      console.log(`Project "${project.title}" has cover: ${project.cover}`);
+    }
+  });
   
   console.log(`Loaded ${projects.length} projects`);
   return projects.sort((a, b) => a.order - b.order);
@@ -185,7 +209,7 @@ export async function loadCreatives(): Promise<Creative[]> {
     tags: file.frontMatter.tags || [],
     category: file.frontMatter.category || 'Art',
     featured: file.frontMatter.featured || false,
-    cover: file.frontMatter.cover || file.frontMatter.image || undefined,
+    image: file.frontMatter.image || file.frontMatter.cover || undefined,
     createdAt: new Date(file.frontMatter.date),
     updatedAt: new Date(file.frontMatter.date),
   }));

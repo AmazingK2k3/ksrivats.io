@@ -42,6 +42,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/search", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ message: "Search query is required" });
+      }
+      const results = await storage.searchAll(query);
+      res.json(results);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to perform search" });
+    }
+  });
+
   app.get("/api/posts/category/:category", async (req, res) => {
     try {
       const { category } = req.params;

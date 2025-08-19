@@ -1,5 +1,8 @@
 import { Link } from "wouter";
 import { Twitter, Linkedin, Github, Heart } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+
+// Assuming these assets are correctly pathed in your project setup
 import logoKLight from "@assets/Vector_1752222029379.png";
 import logoKDark from "@assets/Layer 3_1752222033300.png";
 
@@ -10,37 +13,57 @@ const LogoK = () => (
   </>
 );
 
+interface Post {
+  id: number;
+  title: string;
+  slug: string;
+  createdAt: string;
+}
+
+interface Project {
+  id: number;
+  title: string;
+  slug: string;
+  createdAt: string;
+}
+
 export function Footer() {
-  const navigation = {
-    explore: [
-      { name: "Recent Essays", href: "/blog" },
-      { name: "Research Papers", href: "/projects" },
-      { name: "AI & Consciousness", href: "/blog" },
-      { name: "Mindful Computing", href: "/projects/mindful-computing" },
-    ],
-    projects: [
-      { name: "Siemens AI Research", href: "/projects/siemens-ai-research" },
-      { name: "Mindful Computing", href: "/projects/mindful-computing" },
-      { name: "Academic Papers", href: "/projects/academic-papers" },
-    ],
-    social: [
-      {
-        name: "Twitter",
-        href: "https://x.com/KaushikSrivats1?t=FbrkdannY0_qpvyU6k0WwQ&s=09",
-        icon: Twitter,
-      },
-      {
-        name: "LinkedIn",
-        href: "http://www.linkedin.com/in/kaushik-srivatsan",
-        icon: Linkedin,
-      },
-      {
-        name: "GitHub",
-        href: "http://github.com/AmazingK2k3",
-        icon: Github,
-      },
-    ],
-  };
+  const { data: recentPosts = [] } = useQuery<Post[]>({
+    queryKey: ["/api/posts"],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const { data: recentProjects = [] } = useQuery<Project[]>({
+    queryKey: ["/api/projects"],
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Get the 4 most recent posts and projects
+  const topPosts = recentPosts
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 4);
+
+  const topProjects = recentProjects
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 4);
+
+  const socialLinks = [
+    {
+      name: "Twitter",
+      href: "https://x.com/KaushikSrivats1?t=FbrkdannY0_qpvyU6k0WwQ&s=09",
+      icon: Twitter,
+    },
+    {
+      name: "LinkedIn",
+      href: "http://www.linkedin.com/in/kaushik-srivatsan",
+      icon: Linkedin,
+    },
+    {
+      name: "GitHub",
+      href: "http://github.com/AmazingK2k3",
+      icon: Github,
+    },
+  ];
 
   return (
     <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/50 border-t border-border">
@@ -56,56 +79,45 @@ export function Footer() {
             <p className="text-muted-foreground mb-4 max-w-md">
               Building and creating things of value. AI researcher exploring consciousness, creativity, and the meaningful intersection of technology and human experience.
             </p>
-            <div className="flex space-x-4">
-              {navigation.social.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <span className="sr-only">{item.name}</span>
-                  <item.icon className="w-6 h-6" />
-                </a>
-              ))}
-            </div>
           </div>
-
+          
           <div>
-            <h4 className="font-sans font-semibold text-lg mb-4">Explore</h4>
+            <h4 className="font-sans font-semibold text-lg mb-4">Recent Writing</h4>
             <ul className="space-y-2 text-muted-foreground">
-              {navigation.explore.map((item) => (
-                <li key={item.name}>
-                  {item.href.startsWith("http") ? (
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-primary transition-colors"
+              {topPosts.length > 0 ? (
+                topPosts.map((post) => (
+                  <li key={post.id}>
+                    <Link 
+                      href={`/blog/${post.slug}`} 
+                      className="hover:text-primary transition-colors text-sm line-clamp-1"
                     >
-                      {item.name}
-                    </a>
-                  ) : (
-                    <Link href={item.href} className="hover:text-primary transition-colors">
-                      {item.name}
+                      {post.title}
                     </Link>
-                  )}
-                </li>
-              ))}
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm">No recent posts</li>
+              )}
             </ul>
           </div>
 
           <div>
-            <h4 className="font-sans font-semibold text-lg mb-4">Projects</h4>
+            <h4 className="font-sans font-semibold text-lg mb-4">Recent Projects</h4>
             <ul className="space-y-2 text-muted-foreground">
-              {navigation.projects.map((item) => (
-                <li key={item.name}>
-                  <Link href={item.href} className="hover:text-primary transition-colors">
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
+              {topProjects.length > 0 ? (
+                topProjects.map((project) => (
+                  <li key={project.id}>
+                    <Link
+                      href={`/projects/${project.slug}`}
+                      className="hover:text-primary transition-colors text-sm line-clamp-1"
+                    >
+                      {project.title}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className="text-sm">No recent projects</li>
+              )}
             </ul>
           </div>
         </div>
@@ -116,11 +128,19 @@ export function Footer() {
               © 2025 Kaushik Srivatsan. Built with love and curiosity.
               <Heart className="w-4 h-4 text-red-500" />
             </p>
-            <div className="flex items-center space-x-4 mt-4 md:mt-0">
-              <div className="flex items-center space-x-2">
-                <LogoK />
-                <span className="text-sm font-medium text-primary">Digital Home</span>
-              </div>
+            <div className="flex items-center gap-4 mt-4 md:mt-0">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-colors"
+                  title={link.name}
+                >
+                  <link.icon className="w-5 h-5" />
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -128,3 +148,4 @@ export function Footer() {
     </footer>
   );
 }
+import { Card, CardContent } from "./ui/card";

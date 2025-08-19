@@ -23,6 +23,10 @@ export function log(message: string, source = "express") {
 }
 
 export async function setupVite(app: Express, server: Server) {
+  // Serve static files from client/public in development
+  const publicPath = path.resolve(__dirname, "..", "client", "public");
+  app.use(express.static(publicPath));
+
   const serverOptions = {
     middlewareMode: true,
     hmr: { server },

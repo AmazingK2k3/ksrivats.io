@@ -1,224 +1,243 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Tag, Search } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { format } from "date-fns";
 
+// --- Type Definition for a Gallery Item ---
 interface Creative {
   id: number;
-  title: string;
+  title?: string;
   slug: string;
-  description: string;
-  content: string;
-  tags: string[];
-  category: string;
-  featured: boolean;
-  cover?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string;
+  image?: string;
+  category?: string;
+  tags?: string[];
+  featured?: boolean;
+  createdAt: string;
 }
 
-export default function Creatives() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTag, setSelectedTag] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+// --- Gallery Item Component ---
+// This component represents a single piece of art in the gallery.
+function GalleryItem({ item, style }: { item: Creative; style?: React.CSSProperties }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
+  const getImageUrl = (imagePath: string | undefined): string => {
+    // Handle undefined or null imagePath
+    if (!imagePath) {
+      return '/placeholder-image.jpg'; // You can add a placeholder image
+    }
+    // If it's already a full URL, return it as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+    // For creative images, they should be in /creatives/ folder
+    if (!imagePath.startsWith('/')) {
+      return `/creatives/${imagePath}`;
+    }
+    return imagePath;
+  };
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+    setImageLoaded(true);
+  };
+
+  // Calculate aspect ratio for responsive height
+  const aspectRatio = imageDimensions.width > 0 ? imageDimensions.height / imageDimensions.width : 1;
+  const maxHeight = Math.min(500, Math.max(200, aspectRatio * 300)); // Flexible height based on aspect ratio
+
+  return (
+    <div 
+      className="group relative overflow-hidden rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
+      style={{
+        ...style,
+        marginBottom: '20px',
+        breakInside: 'avoid',
+        height: imageLoaded ? 'auto' : '300px'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <Link href={`/creatives/${item.slug}`}>
+        <div className="relative overflow-hidden rounded-lg">
+          <img
+            src={getImageUrl(item.image)}
+            alt={item.title || `Creative work ${item.id}`}
+            className="w-full h-auto object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
+            loading="lazy"
+            onLoad={handleImageLoad}
+            style={{
+              maxHeight: imageLoaded ? 'none' : '300px',
+              minHeight: imageLoaded ? 'auto' : '200px'
+            }}
+          />
+          {/* Interactive Overlay - Only show if there's title or description */}
+          {(item.title || item.description) && (
+            <div 
+              className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            >
+              <div className="absolute bottom-0 left-0 p-4 w-full">
+                {item.title && (
+                  <h3 className="text-lg font-bold text-white mb-1 transform transition-transform duration-300 ease-out group-hover:translate-y-0 translate-y-4 opacity-0 group-hover:opacity-100">
+                    {item.title}
+                  </h3>
+                )}
+                {item.description && (
+                  <p className="text-sm text-white/80 transform transition-transform duration-300 ease-out delay-75 group-hover:translate-y-0 translate-y-4 opacity-0 group-hover:opacity-100 line-clamp-2">
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+
+// --- Masonry Layout Component ---
+function MasonryGrid({ items }: { items: Creative[] }) {
+  const [columns, setColumns] = useState(4);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Responsive column calculation
+  useEffect(() => {
+    const updateColumns = () => {
+      if (typeof window !== 'undefined') {
+        const width = window.innerWidth;
+        if (width < 640) setColumns(1);
+        else if (width < 768) setColumns(2);
+        else if (width < 1024) setColumns(3);
+        else if (width < 1280) setColumns(4);
+        else setColumns(5);
+      }
+    };
+
+    updateColumns();
+    window.addEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns);
+  }, []);
+
+  // Distribute items across columns
+  const distributeItems = () => {
+    const cols: Creative[][] = Array.from({ length: columns }, () => []);
+    
+    items.forEach((item, index) => {
+      const columnIndex = index % columns;
+      cols[columnIndex].push(item);
+    });
+    
+    return cols;
+  };
+
+  const columnItems = distributeItems();
+
+  return (
+    <div 
+      ref={containerRef}
+      className="flex gap-4 justify-center"
+      style={{ maxWidth: '1400px', margin: '0 auto' }}
+    >
+      {columnItems.map((columnContent, columnIndex) => (
+        <div 
+          key={columnIndex}
+          className="flex flex-col"
+          style={{ 
+            flex: '1',
+            minWidth: 0,
+            maxWidth: `${100 / columns}%`
+          }}
+        >
+          {columnContent.map((item) => (
+            <GalleryItem key={item.id} item={item} />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
+// --- Main Creatives Page Component ---
+export default function CreativesPage() {
   const { data: creatives = [], isLoading } = useQuery<Creative[]>({
     queryKey: ["/api/creatives"],
   });
 
-  const { data: searchResults = [] } = useQuery<Creative[]>({
-    queryKey: ["/api/creatives/search", searchQuery],
-    enabled: searchQuery.length > 0,
-    queryFn: async () => {
-      // For now, we'll do client-side filtering. In the future, implement server-side search
-      return creatives.filter(creative => 
-        creative.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        creative.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        creative.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-    },
-  });
-
-  const filteredCreatives = searchQuery ? searchResults : creatives;
-
-  // Get all unique tags and categories
-  const allTags = Array.from(new Set(creatives.flatMap(creative => creative.tags || [])));
-  const allCategories = Array.from(new Set(creatives.map(creative => creative.category).filter(Boolean))) as string[];
-
-  const displayedCreatives = filteredCreatives.filter((creative) => {
-    if (selectedTag && !creative.tags?.includes(selectedTag)) return false;
-    if (selectedCategory && creative.category !== selectedCategory) return false;
-    return true;
-  });
-
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background text-foreground">
         <Navigation />
-        <div className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+        
+        <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12">
-              <h1 className="text-4xl sm:text-5xl font-sans font-bold mb-4 gradient-text">
+            <header className="text-center mb-16">
+              <h1 className="text-5xl sm:text-6xl font-sans font-bold mb-4 gradient-text">
                 Creative Corner
               </h1>
-              <p className="text-xl text-muted-foreground">
-                Artistic explorations, sketches, and creative experiments
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                A gallery of artistic explorations, visual experiments, and digital sketches.
               </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <CardContent className="p-6">
-                    <div className="h-4 bg-muted rounded mb-4" />
-                    <div className="h-6 bg-muted rounded mb-3" />
-                    <div className="h-4 bg-muted rounded mb-4" />
-                    <div className="h-4 bg-muted rounded" />
-                  </CardContent>
-                </Card>
+            </header>
+
+            {/* Loading skeleton with improved masonry layout */}
+            <div className="flex gap-4 justify-center max-w-7xl mx-auto">
+              {[...Array(4)].map((_, colIndex) => (
+                <div key={colIndex} className="flex flex-col flex-1 gap-4">
+                  {[...Array(3)].map((_, itemIndex) => (
+                    <div 
+                      key={itemIndex} 
+                      className="animate-pulse bg-muted/30 rounded-lg"
+                      style={{
+                        height: `${Math.floor(Math.random() * 200) + 250}px`
+                      }}
+                    />
+                  ))}
+                </div>
               ))}
             </div>
           </div>
-        </div>
+        </main>
+
         <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <Navigation />
       
-      <div className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+      <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl font-sans font-bold mb-4 gradient-text">
+          <header className="text-center mb-16">
+            <h1 className="text-5xl sm:text-6xl font-sans font-bold mb-4 gradient-text">
               Creative Corner
             </h1>
-            <p className="text-xl text-muted-foreground">
-              Artistic explorations, sketches, and creative experiments
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              A gallery of artistic explorations, visual experiments, and digital sketches.
             </p>
-          </div>
+          </header>
 
-          {/* Search and Filters */}
-          <div className="mb-12">
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search creatives..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
+          {/* Masonry Gallery Layout */}
+          <MasonryGrid items={creatives} />
 
-            <div className="flex flex-wrap gap-2 mb-4">
-              <Button
-                variant={selectedCategory === "" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedCategory("")}
-              >
-                All Categories
-              </Button>
-              {allCategories.map((category) => (
-                <Button
-                  key={category}
-                  variant={selectedCategory === category ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category || '')}
-                >
-                  {category}
-                </Button>
-              ))}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Button
-                variant={selectedTag === "" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedTag("")}
-              >
-                All Tags
-              </Button>
-              {allTags.slice(0, 10).map((tag) => (
-                <Button
-                  key={tag}
-                  variant={selectedTag === tag ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setSelectedTag(tag)}
-                >
-                  <Tag className="w-3 h-3 mr-1" />
-                  {tag}
-                </Button>
-              ))}
-            </div>
-          </div>
-
-          {/* Creatives Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayedCreatives.map((creative) => (
-              <CreativeCard key={creative.id} creative={creative} />
-            ))}
-          </div>
-
-          {displayedCreatives.length === 0 && (
+          {/* Empty state */}
+          {creatives.length === 0 && (
             <div className="text-center py-16">
               <p className="text-xl text-muted-foreground">
-                No creatives found matching your criteria.
+                No creative works found. Check back soon for updates!
               </p>
             </div>
           )}
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>
-  );
-}
-
-function CreativeCard({ creative }: { creative: Creative }) {
-  return (
-    <Card className="group hover:shadow-xl transition-shadow">
-      <CardContent className="p-6">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-3">
-          {creative.category && (
-            <Badge variant="secondary" className="text-xs">
-              {creative.category}
-            </Badge>
-          )}
-          <span className="flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
-            {creative.updatedAt && format(new Date(creative.updatedAt), "MMM d, yyyy")}
-          </span>
-        </div>
-
-        <h3 className="font-sans font-semibold text-xl mb-3 group-hover:text-primary transition-colors">
-          <Link href={`/creatives/${creative.slug}`}>{creative.title}</Link>
-        </h3>
-
-        <p className="text-muted-foreground mb-4 line-clamp-3">
-          {creative.description}
-        </p>
-
-        {creative.tags && creative.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {creative.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
-                <Tag className="w-3 h-3 mr-1" />
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
   );
 }

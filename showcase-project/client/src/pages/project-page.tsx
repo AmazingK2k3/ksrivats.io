@@ -39,16 +39,31 @@ export default function ProjectPage() {
     },
   });
 
+  const getImageUrl = (coverPath?: string): string | undefined => {
+    if (!coverPath) {
+      return undefined;
+    }
+    // If it's already a full URL, return it as is
+    if (coverPath.startsWith('http://') || coverPath.startsWith('https://')) {
+      return coverPath;
+    }
+    // For local/relative paths, ensure it starts with a '/' to point to the public root
+    return coverPath.startsWith('/') ? coverPath : `/${coverPath}`;
+  };
+
   if (isLoading) {
     return (
-      <div className="container mx-auto max-w-4xl py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-muted rounded w-3/4 mb-4"></div>
-          <div className="h-4 bg-muted rounded w-1/2 mb-6"></div>
-          <div className="space-y-3">
-            <div className="h-4 bg-muted rounded"></div>
-            <div className="h-4 bg-muted rounded"></div>
-            <div className="h-4 bg-muted rounded w-5/6"></div>
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="container mx-auto max-w-4xl py-8 pt-20">
+          <div className="animate-pulse">
+            <div className="h-8 bg-muted rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-muted rounded w-1/2 mb-6"></div>
+            <div className="space-y-3">
+              <div className="h-4 bg-muted rounded"></div>
+              <div className="h-4 bg-muted rounded"></div>
+              <div className="h-4 bg-muted rounded w-5/6"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -57,22 +72,27 @@ export default function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="container mx-auto max-w-4xl py-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
-          <p className="text-muted-foreground mb-4">
-            The project you're looking for doesn't exist.
-          </p>
-          <Link href="/projects">
-            <Button variant="outline">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Projects
-            </Button>
-          </Link>
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="container mx-auto max-w-4xl py-8 pt-20">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
+            <p className="text-muted-foreground mb-4">
+              The project you're looking for doesn't exist.
+            </p>
+            <Link href="/projects">
+              <Button variant="outline">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Projects
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
+
+  const imageUrl = getImageUrl(project.cover);
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,16 +108,14 @@ export default function ProjectPage() {
           </Link>
           
           {/* Cover Image */}
-          {project.cover && (
+          {imageUrl && (
             <div className="relative h-64 mb-8 overflow-hidden rounded-lg">
-              <div 
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ 
-                  backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${project.cover})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
+              <img
+                src={imageUrl}
+                alt={`${project.title} cover`}
+                className="w-full h-full object-cover"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="flex flex-wrap gap-2">
                   {project.tags?.map((tag: string) => (
@@ -111,7 +129,7 @@ export default function ProjectPage() {
           )}
           
           {/* Tags (if no cover image) */}
-          {!project.cover && (
+          {!imageUrl && (
             <div className="flex flex-wrap gap-2 mb-4">
               {project.tags?.map((tag: string) => (
                 <Badge key={tag} variant="secondary">

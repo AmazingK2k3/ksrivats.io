@@ -31,6 +31,7 @@ export interface IStorage {
   createPost(post: InsertPost): Promise<Post>;
   updatePost(slug: string, post: Partial<InsertPost>): Promise<Post | undefined>;
   searchPosts(query: string): Promise<Post[]>;
+  searchAll(query: string): Promise<{ posts: Post[]; projects: Project[]; creatives: Creative[] }>;
   
   // Projects
   getProjects(): Promise<Project[]>;
@@ -262,6 +263,40 @@ export class MemStorage implements IStorage {
         )
       )
       .sort((a, b) => (b.publishedAt?.getTime() || 0) - (a.publishedAt?.getTime() || 0));
+  }
+
+  async searchAll(query: string): Promise<{ posts: Post[]; projects: Project[]; creatives: Creative[] }> {
+    const lowercaseQuery = query.toLowerCase();
+    
+    const posts = Array.from(this.posts.values())
+      .filter(post => 
+        post.published && (
+          post.title.toLowerCase().includes(lowercaseQuery) ||
+          post.content.toLowerCase().includes(lowercaseQuery) ||
+          post.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+        )
+      )
+      .sort((a, b) => (b.publishedAt?.getTime() || 0) - (a.publishedAt?.getTime() || 0));
+
+    const projects = Array.from(this.projects.values())
+      .filter(project => 
+        project.title.toLowerCase().includes(lowercaseQuery) ||
+        project.description.toLowerCase().includes(lowercaseQuery) ||
+        (project.content && project.content.toLowerCase().includes(lowercaseQuery)) ||
+        project.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+      )
+      .sort((a, b) => (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0));
+
+    const creatives = Array.from(this.creatives.values())
+      .filter(creative => 
+        creative.title.toLowerCase().includes(lowercaseQuery) ||
+        creative.description.toLowerCase().includes(lowercaseQuery) ||
+        (creative.content && creative.content.toLowerCase().includes(lowercaseQuery)) ||
+        creative.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+      )
+      .sort((a, b) => (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0));
+
+    return { posts, projects, creatives };
   }
 
   async getProjects(): Promise<Project[]> {

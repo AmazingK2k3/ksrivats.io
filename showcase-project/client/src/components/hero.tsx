@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, BookOpen, Podcast } from "lucide-react";
+import { ArrowRight, Sparkles, Briefcase, PenSquare, Paintbrush } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
@@ -6,8 +6,8 @@ import profilePhoto from "@assets/profile_1752217997980.jpg";
 
 export function Hero() {
   return (
-    <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <section className="pt-28 pb-16 px-4 sm:px-6 lg:px-8 bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-in">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-sans font-bold leading-tight mb-6">
@@ -37,17 +37,17 @@ export function Hero() {
           <div className="animate-slide-up">
             <div className="relative">
               <div className="w-full max-w-md mx-auto">
-                <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-primary/10 to-primary/20">
+                <div className="aspect-square rounded-full overflow-hidden shadow-2xl bg-gradient-to-br from-primary/10 to-primary/20 hover:animate-float transition-all duration-300 group">
                   <img
                     src={profilePhoto}
                     alt="Professional photo of Kaushik Srivatsan"
-                    className="w-full h-full object-cover animate-float"
+                    className="w-full h-full object-cover"
                   />
                 </div>
               </div>
               {/* Decorative elements */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/30 rounded-full opacity-60 animate-float" style={{ animationDelay: '0.5s' }} />
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-accent/30 to-accent/40 rounded-full opacity-40 animate-float" style={{ animationDelay: '1s' }} />
+              <div className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-primary/20 to-primary/30 rounded-full opacity-60" />
+              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gradient-to-br from-accent/30 to-accent/40 rounded-full opacity-40" />
             </div>
           </div>
         </div>
@@ -63,44 +63,38 @@ export function QuickNavigation() {
       title: "Start Here",
       description: "Get an overview of my work and interests",
       href: "/about",
-      color: "from-primary/20 to-primary/30",
     },
     {
-      icon: BookOpen,
+      icon: Briefcase,
       title: "Tryst with Projects",
       description: "My project portfolio and technical journey",
       href: "/projects",
-      color: "from-accent/20 to-accent/30",
     },
     {
-      icon: BookOpen,
+      icon: PenSquare,
       title: "Writing Musings",
       description: "My digital garden of notes and thoughts",
       href: "/blog",
-      color: "from-primary/30 to-primary/40",
     },
     {
-      icon: Podcast,
+      icon: Paintbrush,
       title: "Creative Corner",
       description: "Creative explorations, sketches, and visual thoughts",
       href: "/creatives",
-      color: "from-accent/30 to-accent/40",
     },
   ];
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/30">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="py-24 bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {items.map((item) => (
             <Link key={item.title} href={item.href}>
-              <Card className="h-full hover:shadow-xl transition-shadow group cursor-pointer">
+              <Card className="h-full bg-primary/5 hover:bg-primary/10 border border-primary/20 hover:border-primary/30 transition-all duration-300 group cursor-pointer p-2">
                 <CardContent className="p-6">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <item.icon className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-sans font-semibold text-lg mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                  <item.icon className="w-7 h-7 mb-5 text-primary transition-transform duration-300 group-hover:-translate-y-1" />
+                  <h3 className="font-sans font-bold text-xl mb-2 text-foreground">{item.title}</h3>
+                  <p className="text-base text-muted-foreground">{item.description}</p>
                 </CardContent>
               </Card>
             </Link>
