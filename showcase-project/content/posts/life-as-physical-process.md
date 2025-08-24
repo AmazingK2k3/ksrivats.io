@@ -5,7 +5,7 @@ date: "2024-12-15"
 tags: ["consciousness", "physics", "philosophy"]
 category: "Philosophy"
 excerpt: "Exploring the fundamental nature of life through the lens of physics and consciousness studies."
-featured: true
+featured: false
 ---
 
 # Life as a physical process

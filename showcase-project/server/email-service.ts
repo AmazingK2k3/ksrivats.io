@@ -17,6 +17,19 @@ interface EmailData {
   message: string;
 }
 
+// HTML escape function to prevent XSS
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+    '\n': '<br>',
+  };
+  return text.replace(/[&<>"'\n]/g, (m) => map[m]);
+}
+
 class EmailService {
   private transporter: Transporter | null = null;
   private initialized = false;
@@ -60,45 +73,84 @@ class EmailService {
     }
 
     try {
+      // Escape HTML to prevent injection
+      const escapedName = escapeHtml(data.name);
+      const escapedEmail = escapeHtml(data.email);
+      const escapedMessage = escapeHtml(data.message);
+
       const mailOptions = {
         from: process.env.SMTP_USER || 'noreply@portfolio.com',
         to: 'kaushiksrivatsan03@gmail.com', // Your email where you want to receive messages
         subject: `New Contact Form Message from ${data.name}`,
         html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
-              New Contact Form Submission
-            </h2>
-            
-            <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #1a202c; margin-top: 0;">Contact Details</h3>
-              <p><strong>Name:</strong> ${data.name}</p>
-              <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">New Contact Form Submission</h1>
+              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">Portfolio Website</p>
             </div>
             
-            <div style="background-color: #fff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-              <h3 style="color: #1a202c; margin-top: 0;">Message</h3>
-              <p style="white-space: pre-wrap; line-height: 1.6;">${data.message}</p>
+            <div style="padding: 30px;">
+              <div style="background-color: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #667eea;">
+                <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Contact Information</h2>
+                <div style="margin-bottom: 15px;">
+                  <strong style="color: #475569; font-size: 14px;">Name:</strong>
+                  <div style="color: #1e293b; font-size: 16px; margin-top: 5px;">${escapedName}</div>
+                </div>
+                <div>
+                  <strong style="color: #475569; font-size: 14px;">Email:</strong>
+                  <div style="margin-top: 5px;">
+                    <a href="mailto:${data.email}" style="color: #667eea; text-decoration: none; font-size: 16px;">${escapedEmail}</a>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="background-color: #ffffff; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 25px;">
+                <h2 style="color: #1e293b; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">Message</h2>
+                <div style="color: #475569; line-height: 1.6; font-size: 15px; white-space: pre-line;">${escapedMessage}</div>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 20px; border-radius: 12px; text-align: center;">
+                <h3 style="color: white; margin: 0 0 10px 0; font-size: 16px;">Quick Actions</h3>
+                <div style="margin-bottom: 15px;">
+                  <a href="mailto:${data.email}" style="display: inline-block; background-color: rgba(255,255,255,0.2); color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: 500; margin: 5px;">
+                    Reply via Email
+                  </a>
+                </div>
+                <p style="color: rgba(255,255,255,0.9); margin: 0; font-size: 13px;">
+                  Response time goal: Within 24 hours
+                </p>
+              </div>
             </div>
             
-            <div style="margin-top: 20px; padding: 15px; background-color: #e6fffa; border-radius: 8px; border-left: 4px solid #38b2ac;">
-              <p style="margin: 0; color: #1a202c;">
-                <strong>Quick Actions:</strong><br>
-                Reply directly to <a href="mailto:${data.email}">${data.email}</a> or 
-                add this contact to your CRM system.
+            <footer style="background-color: #f1f5f9; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+              <p style="color: #64748b; margin: 0; font-size: 12px;">
+                This email was automatically generated from your portfolio contact form.
               </p>
-            </div>
-            
-            <footer style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; text-align: center; color: #718096; font-size: 12px;">
-              <p>This email was sent from your portfolio contact form.</p>
+              <p style="color: #64748b; margin: 5px 0 0 0; font-size: 12px;">
+                Timestamp: ${new Date().toLocaleString('en-US', { 
+                  timeZone: 'UTC',
+                  year: 'numeric',
+                  month: 'long', 
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })} UTC
+              </p>
             </footer>
           </div>
         `,
         replyTo: data.email,
+        // Add some security headers
+        headers: {
+          'X-Priority': '3',
+          'X-MSMail-Priority': 'Normal',
+          'X-Mailer': 'Portfolio Contact Form',
+        },
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Contact email sent successfully');
+      console.log(`Contact email sent successfully from ${data.email}`);
       return true;
     } catch (error) {
       console.error('Failed to send contact email:', error);

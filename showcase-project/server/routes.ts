@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertPostSchema, insertProjectSchema, insertContactSchema } from "@shared/schema";
 import { emailService } from "./email-service";
+import { checkRateLimit, getClientIP, validateContactData, detectSpam } from "./security";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -189,16 +190,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Contact endpoints
   app.post("/api/contact", async (req, res) => {
     try {
-      const contactData = insertContactSchema.parse(req.body);
+      // Get client IP for rate limiting
+      const clientIP = getClientIP(req);
+      
+      // Check rate limit
+      const rateLimit = checkRateLimit(clientIP);
+      if (!rateLimit.allowed) {
+        const resetTime = new Date(rateLimit.resetTime!);
+        return res.status(429).json({ 
+          message: "Too many requests. Please try again later.",
+          resetTime: resetTime.toISOString()
+        });
+      }
+
+      // Validate and sanitize input
+      const validation = validateContactData(req.body);
+      if (!validation.isValid) {
+        return res.status(400).json({ 
+          message: "Invalid input", 
+          errors: validation.errors 
+        });
+      }
+
+      const sanitizedData = validation.sanitizedData!;
+
+      // Check for spam
+      if (detectSpam(sanitizedData)) {
+        console.warn(`Potential spam detected from IP ${clientIP}:`, sanitizedData);
+        return res.status(400).json({ 
+          message: "Message appears to be spam. Please try again with a different message." 
+        });
+      }
+
+      // Validate with Zod schema (additional validation)
+      const contactData = insertContactSchema.parse(sanitizedData);
       
       // Store the contact in the database
       const contact = await storage.createContact(contactData);
       
       // Try to send email notification
+      let emailSent = false;
       try {
-        const emailSent = await emailService.sendContactEmail(contactData);
+        emailSent = await emailService.sendContactEmail(contactData);
         if (emailSent) {
-          console.log('Contact email sent successfully');
+          console.log(`Contact email sent successfully from ${contactData.email} (IP: ${clientIP})`);
         }
       } catch (emailError) {
         console.error('Failed to send email notification:', emailError);
@@ -207,13 +242,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.status(201).json({ 
         ...contact, 
-        emailSent: emailService.isInitialized() 
+        emailSent,
+        remainingRequests: rateLimit.remainingRequests
       });
     } catch (error) {
+      console.error('Contact form submission error:', error);
+      
       if (error instanceof z.ZodError) {
-        return res.status(400).json({ message: "Invalid contact data", errors: error.errors });
+        return res.status(400).json({ 
+          message: "Invalid contact data", 
+          errors: error.errors.map(e => e.message)
+        });
       }
-      res.status(500).json({ message: "Failed to submit contact form" });
+      
+      res.status(500).json({ 
+        message: "Failed to submit contact form. Please try again later." 
+      });
     }
   });
 

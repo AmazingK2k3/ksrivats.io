@@ -5,9 +5,9 @@ import { join } from "path";
 
 interface Creative {
   id: number;
-  title: string;
+  title?: string; // Made optional to match content-loader
   slug: string;
-  description: string;
+  description?: string; // Made optional to match content-loader
   content: string;
   tags: string[];
   category: string;
@@ -287,14 +287,8 @@ export class MemStorage implements IStorage {
       )
       .sort((a, b) => (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0));
 
-    const creatives = Array.from(this.creatives.values())
-      .filter(creative => 
-        creative.title.toLowerCase().includes(lowercaseQuery) ||
-        creative.description.toLowerCase().includes(lowercaseQuery) ||
-        (creative.content && creative.content.toLowerCase().includes(lowercaseQuery)) ||
-        creative.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
-      )
-      .sort((a, b) => (b.updatedAt?.getTime() || 0) - (a.updatedAt?.getTime() || 0));
+    // Return empty creatives array since we're not searching them
+    const creatives: Creative[] = [];
 
     return { posts, projects, creatives };
   }
@@ -325,9 +319,11 @@ export class MemStorage implements IStorage {
       status: insertProject.status ?? null,
       content: insertProject.content ?? null,
       tags: insertProject.tags ?? null,
+      tech: insertProject.tech ?? null, // Add tech field
       featured: insertProject.featured ?? null,
       github: insertProject.github ?? null,
       cover: insertProject.cover ?? null,
+      order: insertProject.order ?? 0, // Add order field with default
     };
     this.projects.set(project.slug, project);
     return project;

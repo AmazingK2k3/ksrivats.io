@@ -6,6 +6,9 @@ import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import type { Post, Project, InsertPost, InsertProject } from '@shared/schema';
 
+// Define the project status type
+type ProjectStatus = 'current' | 'completed' | 'archived';
+
 interface Creative {
   id: number;
   title?: string;
@@ -30,6 +33,7 @@ interface MarkdownFrontMatter {
   featured?: boolean;
   status?: string;
   tech_stack?: string[];
+  tech?: string[]; // Added for technical stack
   description?: string;
   link?: string;
   github?: string;
@@ -37,6 +41,7 @@ interface MarkdownFrontMatter {
   liveUrl?: string;
   cover?: string;
   image?: string;
+  order?: number; // Added for ordering
   links?: Array<{
     type: string;
     url: string;
@@ -152,7 +157,7 @@ export async function loadProjects(): Promise<Project[]> {
       content: file.htmlContent,
       status: (file.frontMatter.status as ProjectStatus) || 'completed',
       tags: file.frontMatter.tags || [],
-      tech: file.frontMatter.tech || [],
+      tech: file.frontMatter.tech || file.frontMatter.tech_stack || [],
       link: file.frontMatter.link || null,
       github: file.frontMatter.github || null,
       category: file.frontMatter.category || 'General',

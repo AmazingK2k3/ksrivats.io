@@ -10,7 +10,7 @@ interface SearchResult {
   title: string;
   excerpt: string;
   url: string;
-  type: 'post' | 'project';
+  type: 'post' | 'project' | 'creative';
 }
 
 interface SearchProps {

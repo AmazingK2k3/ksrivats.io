@@ -60,7 +60,7 @@ export function WritingSection() {
         </div>
 
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="outline" className="h-12 px-8">
+          <Button asChild size="lg" variant="default" className="h-12 px-8">
             <Link href="/blog">
               View All Essays
               <ArrowRight className="w-5 h-5 ml-2" />

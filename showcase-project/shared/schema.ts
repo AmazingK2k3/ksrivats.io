@@ -29,11 +29,13 @@ export const projects = pgTable("projects", {
   description: text("description").notNull(),
   content: text("content"),
   tags: text("tags").array(),
+  tech: text("tech").array(), // Technical stack/technologies used
   status: text("status"), // current, completed, archived
   link: text("link"),
   github: text("github"),
   cover: text("cover"),
   featured: boolean("featured").default(false),
+  order: integer("order").default(0), // For ordering projects
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

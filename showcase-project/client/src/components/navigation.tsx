@@ -31,35 +31,43 @@ export function Navigation() {
   const [location] = useLocation();
 
   const handleSearch = async (query: string) => {
-    // Search through posts, projects, and creatives
-    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-    const { posts, projects, creatives } = await response.json();
-    
-    const searchResults = [
-      ...posts.map((post: any) => ({
-        id: `post-${post.id}`,
-        title: post.title,
-        excerpt: post.excerpt || "",
-        url: `/blog/${post.slug}`,
-        type: 'post' as const,
-      })),
-      ...projects.map((project: any) => ({
-        id: `project-${project.id}`,
-        title: project.title,
-        excerpt: project.description || "",
-        url: `/projects/${project.slug}`,
-        type: 'project' as const,
-      })),
-      ...creatives.map((creative: any) => ({
-        id: `creative-${creative.id}`,
-        title: creative.title,
-        excerpt: creative.description || "",
-        url: `/creatives/${creative.slug}`,
-        type: 'creative' as const,
-      }))
-    ];
-    
-    return searchResults;
+    try {
+      // Search through posts and projects only
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      
+      if (!response.ok) {
+        console.error('Search API error:', response.status, response.statusText);
+        return [];
+      }
+      
+      const data = await response.json();
+      console.log('Search API response:', data);
+      
+      const { posts = [], projects = [] } = data;
+      
+      const searchResults = [
+        ...posts.map((post: any) => ({
+          id: `post-${post.id}`,
+          title: post.title,
+          excerpt: post.excerpt || "",
+          url: `/blog/${post.slug}`,
+          type: 'post' as const,
+        })),
+        ...projects.map((project: any) => ({
+          id: `project-${project.id}`,
+          title: project.title,
+          excerpt: project.description || "",
+          url: `/projects/${project.slug}`,
+          type: 'project' as const,
+        }))
+      ];
+      
+      console.log('Processed search results:', searchResults);
+      return searchResults;
+    } catch (error) {
+      console.error('Search error:', error);
+      return [];
+    }
   };
 
   return (

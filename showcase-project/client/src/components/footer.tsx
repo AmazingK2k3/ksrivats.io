@@ -1,6 +1,7 @@
 import { Link } from "wouter";
-import { Twitter, Linkedin, Github, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { SocialLinks } from "@/components/social-links";
 
 // Assuming these assets are correctly pathed in your project setup
 import logoKLight from "@assets/Vector_1752222029379.png";
@@ -47,26 +48,8 @@ export function Footer() {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 4);
 
-  const socialLinks = [
-    {
-      name: "Twitter",
-      href: "https://x.com/KaushikSrivats1?t=FbrkdannY0_qpvyU6k0WwQ&s=09",
-      icon: Twitter,
-    },
-    {
-      name: "LinkedIn",
-      href: "http://www.linkedin.com/in/kaushik-srivatsan",
-      icon: Linkedin,
-    },
-    {
-      name: "GitHub",
-      href: "http://github.com/AmazingK2k3",
-      icon: Github,
-    },
-  ];
-
   return (
-    <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/50 border-t border-border">
+    <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-muted/50 dark:bg-[#311024]  border-t border-border">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
@@ -76,9 +59,15 @@ export function Footer() {
               </div>
               <span className="font-sans font-semibold text-lg">Kaushik Srivatsan</span>
             </Link>
-            <p className="text-muted-foreground mb-4 max-w-md">
+            <p className="text-muted-foreground mb-6 max-w-md">
               Building and creating things of value. AI researcher exploring consciousness, creativity, and the meaningful intersection of technology and human experience.
             </p>
+            
+            {/* Social Links - prominently placed */}
+            <div>
+              <h4 className="font-sans font-semibold text-sm mb-3 text-foreground">Connect with me</h4>
+              <SocialLinks variant="horizontal" size="md" className="gap-3" />
+            </div>
           </div>
           
           <div>
@@ -128,19 +117,10 @@ export function Footer() {
               © 2025 Kaushik Srivatsan. Built with love and curiosity.
               <Heart className="w-4 h-4 text-red-500" />
             </p>
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                  title={link.name}
-                >
-                  <link.icon className="w-5 h-5" />
-                </a>
-              ))}
+            <div className="text-sm text-muted-foreground mt-4 md:mt-0">
+              <Link href="/contact" className="hover:text-primary transition-colors">
+                Get in touch!
+              </Link>
             </div>
           </div>
         </div>
@@ -148,4 +128,3 @@ export function Footer() {
     </footer>
   );
 }
-import { Card, CardContent } from "./ui/card";

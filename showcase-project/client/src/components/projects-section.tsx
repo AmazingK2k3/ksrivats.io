@@ -81,7 +81,7 @@ export function ProjectsSection() {
         </div>
 
         <div className="text-center mt-32">
-          <Button asChild size="lg" variant="outline" className="h-14 px-10 text-lg">
+          <Button asChild size="lg" variant="default" className="h-14 px-10 text-lg">
             <Link href="/projects">
               View All Projects
               <ArrowRight className="w-6 h-6 ml-3" />

@@ -6,20 +6,20 @@
 
 :root {
   /* Light mode - Anthropic-inspired cream palette */
-  --background: hsl(35, 17%, 97%);
-  --foreground: hsl(25, 5%, 20%);
-  --card: hsl(35, 17%, 99%);
-  --card-foreground: hsl(25, 5%, 20%);
+  --background: hsl(38, 100%, 97%);
+  --foreground: hsl(332, 27%, 19%);
+  --card:  hsl(38, 100%, 97%);
+  --card-foreground: hsl(332, 27%, 19%);
   --popover: hsl(35, 17%, 99%);
   --popover-foreground: hsl(25, 5%, 20%);
   --primary: hsl(319, 51%, 25%);
   --primary-foreground: hsl(35, 17%, 97%);
   --secondary: hsl(35, 17%, 95%);
-  --secondary-foreground: hsl(25, 5%, 20%);
+  --secondary-foreground:  hsl(332, 27%, 19%);
   --muted: hsl(35, 12%, 92%);
   --muted-foreground: hsl(25, 5%, 45%);
-  --accent: hsl(35, 17%, 92%);
-  --accent-foreground: hsl(25, 5%, 20%);
+  --accent: hsl(314, 31%, 89%);
+  --accent-foreground:  hsl(332, 27%, 19%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(35, 17%, 97%);
   --border: hsl(35, 12%, 88%);
@@ -50,9 +50,9 @@
 
 .dark {
   /* Dark mode - Deep wine/burgundy palette */
-  --background: hsl(320, 45%, 18%);
+  --background: hsl(324, 51%, 13%);
   --foreground: hsl(35, 17%, 95%);
-  --card: hsl(320, 45%, 16%);
+  --card: hsl(322, 56%, 12%);
   --card-foreground: hsl(35, 17%, 95%);
   --popover: hsl(320, 45%, 16%);
   --popover-foreground: hsl(35, 17%, 95%);
@@ -262,4 +262,119 @@
 
 .prose em {
   color: hsl(var(--foreground));
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Ensure proper spacing and alignment on mobile */
+  .mobile-center {
+    @apply text-center;
+  }
+  
+  /* Better mobile button spacing */
+  .mobile-button-spacing {
+    @apply space-y-3;
+  }
+  
+  /* Mobile-optimized text sizes */
+  .mobile-text-responsive {
+    @apply text-base leading-relaxed;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Better mobile card padding */
+  .mobile-card-padding {
+    @apply px-3 py-4;
+  }
+  
+  /* Ensure images don't overflow */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Improved mobile touch targets */
+@media (max-width: 640px) {
+  button, a, [role="button"] {
+    min-height: 44px; /* iOS recommended touch target size */
+    min-width: 44px;
+  }
+}
+
+/* Better mobile typography scaling */
+@media (max-width: 380px) {
+  .gradient-text {
+    @apply text-3xl;
+  }
+  
+  h1 {
+    @apply text-3xl;
+  }
+  
+  h2 {
+    @apply text-2xl;
+  }
+}
+
+/* Loading Screen Animations */
+@keyframes logo-entrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) translateY(50px) rotate(-15deg);
+  }
+  20% {
+    opacity: 0.6;
+    transform: scale(0.6) translateY(20px) rotate(-8deg);
+  }
+  60% {
+    opacity: 0.9;
+    transform: scale(1.15) translateY(-10px) rotate(3deg);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(0.98) translateY(2px) rotate(-1deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes logo-glow {
+  0%, 100% {
+    opacity: 0.1;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes page-entrance {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-logo-entrance {
+  animation: logo-entrance 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-logo-glow {
+  animation: logo-glow 4s ease-in-out infinite;
+}
+
+.animate-page-entrance {
+  animation: page-entrance 0.8s ease-out forwards;
 }
