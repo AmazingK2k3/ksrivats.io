@@ -50,3 +50,10 @@ export function getAssetPath(originalPath: string): string {
   console.warn(`Asset not found in manifest: ${originalPath}`);
   return originalPath;
 }
+
+export function resolveImagePath(imagePath: string, type?: string): string {
+  if (!imagePath) return '';
+  
+  // Use the asset manifest system
+  return getAssetPath(imagePath);
+}
