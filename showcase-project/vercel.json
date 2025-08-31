@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "vite build",
+  "buildCommand": "npx vite build && node scripts/build-asset-manifest.js",
   "outputDirectory": "client/dist",
   "functions": {
     "api/**/*.ts": {

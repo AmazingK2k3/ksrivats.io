@@ -90,6 +90,11 @@ function generateAssetManifest() {
   const apiManifestPath = join(process.cwd(), 'api-asset-manifest.json');
   writeFileSync(apiManifestPath, JSON.stringify(manifest, null, 2));
   console.log('API asset manifest written to:', apiManifestPath);
+
+  // Copy to client dist for Vercel deployment
+  const distManifestPath = join(distPath, 'api-asset-manifest.json');
+  writeFileSync(distManifestPath, JSON.stringify(manifest, null, 2));
+  console.log('Dist asset manifest written to:', distManifestPath);
 }
 
 generateAssetManifest();
