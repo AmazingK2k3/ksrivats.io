@@ -2,6 +2,11 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { fileURLToPath } from 'url';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -9,10 +14,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const contentPath = path.join(process.cwd(), 'content', 'projects');
+    // Try multiple path strategies for Vercel deployment
+    const possiblePaths = [
+      path.join(process.cwd(), 'content', 'projects'),
+      path.join('/var/task', 'content', 'projects'),
+      path.join(__dirname, '..', 'content', 'projects'),
+      path.join(__dirname, '..', '..', 'content', 'projects'),
+      path.join(process.cwd(), '..', 'content', 'projects')
+    ];
     
-    if (!fs.existsSync(contentPath)) {
-      return res.status(404).json({ message: 'Content directory not found' });
+    let contentPath: string | null = null;
+    let debugInfo = {
+      cwd: process.cwd(),
+      dirname: __dirname,
+      testedPaths: [] as string[]
+    };
+    
+    for (const testPath of possiblePaths) {
+      debugInfo.testedPaths.push(testPath);
+      if (fs.existsSync(testPath)) {
+        contentPath = testPath;
+        break;
+      }
+    }
+    
+    if (!contentPath) {
+      return res.status(500).json({ 
+        message: 'Content directory not found',
+        debug: debugInfo
+      });
     }
 
     const files = fs.readdirSync(contentPath);
