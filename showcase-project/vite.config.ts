@@ -30,7 +30,14 @@ export default defineConfig({
   build: {
     outDir: "dist",
     emptyOutDir: true,
+    assetsDir: "assets",
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   },
+  publicDir: path.resolve(__dirname, "client/public"),
   server: {
     fs: {
       strict: true,
