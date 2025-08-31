@@ -60,13 +60,3 @@ export const assetUrls = {
   'WhatsApp Image 2025-08-31 at 17.13.16_f37b3a27.jpg': whatsapp1716_f37b3a27,
   'WhatsApp Image 2025-08-31 at 17.13.18_31dfc7c6.jpg': whatsapp1718_31dfc7c6,
 };
-
-// Generate the asset manifest during build
-if (typeof window === 'undefined' && process.env.NODE_ENV === 'production') {
-  // This runs during SSR/build - write the manifest for the API
-  import('fs').then(fs => {
-    const manifestPath = 'api-asset-manifest.json';
-    fs.writeFileSync(manifestPath, JSON.stringify(assetUrls, null, 2));
-    console.log('Asset manifest written to:', manifestPath);
-  }).catch(console.error);
-}
