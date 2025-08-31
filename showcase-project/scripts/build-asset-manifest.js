@@ -1,60 +1,95 @@
-import { readFileSync, writeFileSync, readdirSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs';
 import { join } from 'path';
 
-// Generate asset manifest after Vite build
+// Generate asset manifest that maps original paths to Vite-processed URLs
 function generateAssetManifest() {
   const distPath = join(process.cwd(), 'client/dist');
-  const assetsPath = join(distPath, 'assets');
   const manifestPath = join(distPath, 'asset-manifest.json');
+  
+  console.log('Generating asset manifest from:', distPath);
+  
+  if (!existsSync(distPath)) {
+    console.error('Dist directory not found:', distPath);
+    return;
+  }
+  
+  // Read the Vite manifest to get actual asset URLs
+  const viteManifestPath = join(distPath, '.vite', 'manifest.json');
+  let viteManifest = {};
+  
+  if (existsSync(viteManifestPath)) {
+    try {
+      viteManifest = JSON.parse(readFileSync(viteManifestPath, 'utf-8'));
+      console.log('Loaded Vite manifest with', Object.keys(viteManifest).length, 'entries');
+    } catch (error) {
+      console.log('Could not load Vite manifest:', error.message);
+    }
+  }
   
   const manifest = {};
   
-  // Read the public files that were copied directly
-  const publicFiles = readdirSync(distPath).filter(file => 
-    file.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/i) && 
-    !file.startsWith('.')
-  );
-  
-  publicFiles.forEach(file => {
-    // Map original filename to actual path
-    const originalName = file.replace(/_\d+(-[a-zA-Z0-9]+)?/, ''); // Remove timestamp and hash
-    manifest[originalName] = `/${file}`;
+  // Map assets from Vite manifest
+  Object.entries(viteManifest).forEach(([key, value]) => {
+    if (key.includes('.png') || key.includes('.jpg') || key.includes('.jpeg') || 
+        key.includes('.gif') || key.includes('.svg') || key.includes('.webp')) {
+      
+      // Extract filename from path
+      const filename = key.split('/').pop();
+      const originalPath = key.replace('../public/', '/');
+      
+      manifest[originalPath] = `/${value.file}`;
+      manifest[filename] = `/${value.file}`;
+      
+      console.log(`Mapped: ${originalPath} -> /${value.file}`);
+    }
   });
   
-  // Read the assets folder for processed images
-  try {
+  // Also check the assets directory directly
+  const assetsPath = join(distPath, 'assets');
+  if (existsSync(assetsPath)) {
     const assetFiles = readdirSync(assetsPath).filter(file => 
       file.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/i)
     );
     
     assetFiles.forEach(file => {
-      // Extract original filename from hashed filename
-      const originalName = file.replace(/_\d+(-[a-zA-Z0-9]+)?\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/i, '.$2');
+      // Map back to original filenames by removing Vite hash
+      let originalName = file;
+      
+      // Remove Vite hash pattern: -[hash].[ext]
+      originalName = originalName.replace(/-[a-zA-Z0-9_-]+(\.[^.]+)$/, '$1');
+      
+      // Special mappings for project covers (absolute paths)
+      const projectCovers = {
+        '1_1752220578130.png': '/1_1752220578130.png',
+        'coinview.png': '/coinview.png', 
+        'data_projects.png': '/data_projects.png',
+        'design.png': '/design.png',
+        'favicon.png': '/favicon.png',
+        'logo-backup.png': '/logo-backup.png',
+        'logo-light.png': '/logo-light.png',
+        'logo-main.png': '/logo-main.png',
+        'logo-main2.png': '/logo-main2.png',
+        'zeitgeist.png': '/zeitgeist.png'
+      };
+      
+      if (projectCovers[originalName]) {
+        manifest[projectCovers[originalName]] = `/assets/${file}`;
+        console.log(`Project cover: ${projectCovers[originalName]} -> /assets/${file}`);
+      }
+      
+      // Creative images (filename only for relative references)
       manifest[originalName] = `/assets/${file}`;
+      console.log(`Asset mapped: ${originalName} -> /assets/${file}`);
     });
-  } catch (error) {
-    console.log('No assets directory found');
   }
   
-  // Check subdirectories for organized assets
-  const subDirs = ['creatives', 'data'];
-  subDirs.forEach(dir => {
-    const dirPath = join(distPath, dir);
-    try {
-      const files = readdirSync(dirPath).filter(file => 
-        file.match(/\.(png|jpg|jpeg|gif|svg|ico|webp|avif)$/i)
-      );
-      files.forEach(file => {
-        manifest[file] = `/${dir}/${file}`;
-      });
-    } catch (error) {
-      // Directory doesn't exist, skip
-    }
-  });
-  
   writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-  console.log('Asset manifest generated:', Object.keys(manifest).length, 'assets');
-  console.log('Manifest sample:', Object.fromEntries(Object.entries(manifest).slice(0, 5)));
+  console.log('Asset manifest generated with', Object.keys(manifest).length, 'mappings');
+  
+  // Also write it for the API to access
+  const apiManifestPath = join(process.cwd(), 'api-asset-manifest.json');
+  writeFileSync(apiManifestPath, JSON.stringify(manifest, null, 2));
+  console.log('API asset manifest written to:', apiManifestPath);
 }
 
 generateAssetManifest();

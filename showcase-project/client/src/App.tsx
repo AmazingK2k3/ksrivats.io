@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 import LoadingScreen from "@/components/loading-screen";
 import PageTransition from "@/components/page-transition";
 import Home from "@/pages/home";
+// Import assets to ensure they're processed by Vite
+import "@/lib/assets";
 import Blog from "@/pages/blog";
 import BlogPost from "@/pages/blog-post";
 import Projects from "@/pages/projects";
