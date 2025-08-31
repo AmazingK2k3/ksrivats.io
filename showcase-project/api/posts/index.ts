@@ -80,7 +80,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         post.title.toLowerCase().includes(searchTerm) ||
         post.excerpt.toLowerCase().includes(searchTerm) ||
         post.content.toLowerCase().includes(searchTerm) ||
-        post.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+        post.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm)) ||
         post.category.toLowerCase().includes(searchTerm)
       );
       return res.json(filteredPosts);

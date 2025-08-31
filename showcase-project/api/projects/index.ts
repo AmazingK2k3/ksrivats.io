@@ -88,8 +88,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         project.title.toLowerCase().includes(searchTerm) ||
         project.description.toLowerCase().includes(searchTerm) ||
         project.content.toLowerCase().includes(searchTerm) ||
-        project.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
-        project.tech.some(tech => tech.toLowerCase().includes(searchTerm))
+        project.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm)) ||
+        project.tech.some((tech: string) => tech.toLowerCase().includes(searchTerm))
       ).map(p => ({ ...p, type: 'project' }));
 
       // Also search posts
@@ -123,7 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             post.title.toLowerCase().includes(searchTerm) ||
             post.excerpt.toLowerCase().includes(searchTerm) ||
             post.content.toLowerCase().includes(searchTerm) ||
-            post.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+            post.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm)) ||
             post.category.toLowerCase().includes(searchTerm)
           );
       }
