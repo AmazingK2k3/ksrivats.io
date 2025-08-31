@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { SocialLinks } from "@/components/social-links";
 
 // Assuming these assets are correctly pathed in your project setup
-import logoKLight from "@assets/Vector_1752222029379.png";
-import logoKDark from "@assets/Layer 3_1752222033300.png";
+import logoKLight from "@/assets/images/Vector_1752222029379.png";
+import logoKDark from "@/assets/images/Layer 3_1752222033300.png";
 
 const LogoK = () => (
   <>

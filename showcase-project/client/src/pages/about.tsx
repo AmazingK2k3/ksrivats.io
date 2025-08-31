@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import profilePhoto from "@assets/profile_1752217997980.jpg";
+import profilePhoto from "@/assets/images/profile_1752217997980.jpg";
 
 export default function About() {
   const highlights = [

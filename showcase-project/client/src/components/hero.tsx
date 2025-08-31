@@ -2,7 +2,7 @@ import { ArrowRight, Sparkles, Briefcase, PenSquare, Paintbrush } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "wouter";
-import profilePhoto from "@assets/profile_1752217997980.jpg";
+import profilePhoto from "@/assets/images/profile_1752217997980.jpg";
 
 export function Hero() {
   return (
