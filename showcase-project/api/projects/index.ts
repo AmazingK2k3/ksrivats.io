@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { fileURLToPath } from 'url';
+import { resolveImagePath } from '../utils/assets.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -61,7 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           tags: data.tags || [],
           tech: data.tech || data.tech_stack || [],
           status: data.status || 'completed',
-          cover: data.cover || data.image,
+          cover: resolveImagePath(data.cover || data.image, 'project'),
           links: data.links || [],
           github: data.github || data.githubUrl,
           live: data.liveUrl,

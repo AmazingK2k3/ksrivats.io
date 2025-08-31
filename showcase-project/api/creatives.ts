@@ -3,6 +3,7 @@ import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
 import { fileURLToPath } from 'url';
+import { resolveImagePath } from './utils/assets.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -69,7 +70,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           tags: data.tags || [],
           category: data.category || 'Art',
           featured: data.featured || false,
-          image: data.image ? `/creatives/${data.image}` : data.cover ? `/creatives/${data.cover}` : null,
+          image: resolveImagePath(data.image || data.cover, 'creative'),
           createdAt: new Date(data.date || Date.now()),
           updatedAt: new Date(data.date || Date.now())
         };
