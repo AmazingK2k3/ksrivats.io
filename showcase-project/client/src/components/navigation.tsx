@@ -43,24 +43,13 @@ export function Navigation() {
       const data = await response.json();
       console.log('Search API response:', data);
       
-      const { posts = [], projects = [] } = data;
-      
-      const searchResults = [
-        ...posts.map((post: any) => ({
-          id: `post-${post.id}`,
-          title: post.title,
-          excerpt: post.excerpt || "",
-          url: `/blog/${post.slug}`,
-          type: 'post' as const,
-        })),
-        ...projects.map((project: any) => ({
-          id: `project-${project.id}`,
-          title: project.title,
-          excerpt: project.description || "",
-          url: `/projects/${project.slug}`,
-          type: 'project' as const,
-        }))
-      ];
+      // Handle the new consolidated API format where data is a flat array with type property
+      const searchResults = data.map((item: any) => ({
+        id: `${item.type}-${item.id}`,
+        title: item.title,
+        type: item.type,
+        url: `/${item.type === 'post' ? 'blog' : 'projects'}/${item.slug}`
+      }));
       
       console.log('Processed search results:', searchResults);
       return searchResults;
