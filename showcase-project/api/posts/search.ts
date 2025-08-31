@@ -45,15 +45,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           content
         };
       })
-      .filter(post => 
-        post.published && (
-          post.title.toLowerCase().includes(lowercaseQuery) ||
-          post.content.toLowerCase().includes(lowercaseQuery) ||
-          post.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
-        )
-      );
-    
-    res.json(posts);
+        .filter(post => 
+          post.published && (
+            post.title.toLowerCase().includes(lowercaseQuery) ||
+            post.content.toLowerCase().includes(lowercaseQuery) ||
+            post.tags?.some((tag: string) => tag.toLowerCase().includes(lowercaseQuery))
+          )
+        );    res.json(posts);
   } catch (error) {
     console.error('Error searching posts:', error);
     res.status(500).json({ message: 'Failed to search posts' });

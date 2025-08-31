@@ -47,7 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           post.published && (
             post.title.toLowerCase().includes(lowercaseQuery) ||
             post.content.toLowerCase().includes(lowercaseQuery) ||
-            post.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery))
+            post.tags?.some((tag: string) => tag.toLowerCase().includes(lowercaseQuery))
           )
         );
     }
@@ -79,8 +79,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .filter(project => 
           project.title.toLowerCase().includes(lowercaseQuery) ||
           project.description.toLowerCase().includes(lowercaseQuery) ||
-          project.tags?.some(tag => tag.toLowerCase().includes(lowercaseQuery)) ||
-          project.tech?.some(tech => tech.toLowerCase().includes(lowercaseQuery))
+          project.tags?.some((tag: string) => tag.toLowerCase().includes(lowercaseQuery)) ||
+          project.tech?.some((tech: string) => tech.toLowerCase().includes(lowercaseQuery))
         );
     }
 

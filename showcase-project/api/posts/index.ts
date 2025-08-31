@@ -11,8 +11,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const contentPath = path.join(process.cwd(), 'content', 'posts');
     
+    console.log('Current working directory:', process.cwd());
+    console.log('Content path:', contentPath);
+    console.log('Content path exists:', fs.existsSync(contentPath));
+    
     if (!fs.existsSync(contentPath)) {
-      return res.status(404).json({ message: 'Content directory not found' });
+      // Try alternative paths
+      const altPath1 = path.join(process.cwd(), '..', 'content', 'posts');
+      const altPath2 = path.join(__dirname, '..', '..', 'content', 'posts');
+      console.log('Alt path 1:', altPath1, 'exists:', fs.existsSync(altPath1));
+      console.log('Alt path 2:', altPath2, 'exists:', fs.existsSync(altPath2));
+      
+      return res.status(404).json({ 
+        message: 'Content directory not found',
+        debug: {
+          cwd: process.cwd(),
+          contentPath,
+          altPath1,
+          altPath2
+        }
+      });
     }
 
     const files = fs.readdirSync(contentPath);
