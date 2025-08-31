@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useTheme } from "./ui/theme-provider";
+import logoLight from "@/assets/images/logo-light.png";
+import logoMain2 from "@/assets/images/logo-main2.png";
+import logoBackup from "@/assets/images/logo-backup.png";
 
 interface LoadingScreenProps {
   onLoadingComplete: () => void;
@@ -39,8 +43,8 @@ export default function LoadingScreen({ onLoadingComplete }: LoadingScreenProps)
   }, [onLoadingComplete]);
 
   // Choose logo based on theme
-  const logoSrc = isDarkTheme ? '/logo-main2.png' : '/logo-light.png';
-  const fallbackSrc = '/logo-backup.png';
+  const logoSrc = isDarkTheme ? logoMain2 : logoLight;
+  const fallbackSrc = logoBackup;
 
   return (
     <div

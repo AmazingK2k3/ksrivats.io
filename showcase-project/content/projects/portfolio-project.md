@@ -8,7 +8,7 @@ description: "A modern, responsive portfolio website built with React and TypeSc
 link: "https://portfolio.kaushiksrivatsan.com"
 github: "https://github.com/AmazingK2k3/ksrivats.io"
 featured: false
-cover: "/logo-main.png"
+cover: "/logo-main2.png"
 ---
 
 # Personal Portfolio Website

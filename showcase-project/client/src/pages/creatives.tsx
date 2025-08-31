@@ -27,7 +27,7 @@ function GalleryItem({ item, style }: { item: Creative; style?: React.CSSPropert
   const getImageUrl = (imagePath: string | undefined): string => {
     // Handle undefined or null imagePath
     if (!imagePath) {
-      return '/placeholder-image.jpg'; // You can add a placeholder image
+      return ''; // Return empty string for missing images
     }
     // If it's already a full URL, return it as is
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {

@@ -42,10 +42,10 @@ export function useFeaturedProjects() {
 
 export function useSearchPosts(query: string) {
   return useQuery({
-    queryKey: ["/api/posts/search", query],
+    queryKey: ["/api/posts", query],
     enabled: query.length > 0,
     queryFn: async () => {
-      const response = await fetch(`/api/posts/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`/api/posts?q=${encodeURIComponent(query)}`);
       return response.json();
     },
   });

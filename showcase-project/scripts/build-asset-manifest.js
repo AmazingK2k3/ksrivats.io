@@ -55,8 +55,8 @@ function generateAssetManifest() {
       // Map back to original filenames by removing Vite hash
       let originalName = file;
       
-      // Remove Vite hash pattern: -[hash].[ext]
-      originalName = originalName.replace(/-[a-zA-Z0-9_-]+(\.[^.]+)$/, '$1');
+      // Remove Vite hash pattern: -[8+ chars hash].[ext] (Vite hashes are typically 8+ chars)
+      originalName = originalName.replace(/-[a-zA-Z0-9_]{8,}(\.[^.]+)$/, '$1');
       
       // Special mappings for project covers (absolute paths)
       const projectCovers = {

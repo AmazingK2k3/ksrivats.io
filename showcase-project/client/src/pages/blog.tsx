@@ -21,10 +21,10 @@ export default function Blog() {
   });
 
   const { data: searchResults = [] } = useQuery<Post[]>({
-    queryKey: ["/api/posts/search", searchQuery],
+    queryKey: ["/api/posts", searchQuery],
     enabled: searchQuery.length > 0,
     queryFn: async () => {
-      const response = await fetch(`/api/posts/search?q=${encodeURIComponent(searchQuery)}`);
+      const response = await fetch(`/api/posts?q=${encodeURIComponent(searchQuery)}`);
       return response.json();
     },
   });

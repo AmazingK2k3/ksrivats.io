@@ -13,6 +13,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
+  // Check if this is a search request
+  const searchQuery = req.query.q;
+  const isSearch = searchQuery && typeof searchQuery === 'string';
+
   try {
     // Try different possible paths for content in Vercel environment
     const possiblePaths = [
@@ -68,6 +72,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         };
       })
       .filter(post => post.published);
+
+    // If this is a search request, filter posts based on query
+    if (isSearch) {
+      const searchTerm = searchQuery.toLowerCase();
+      const filteredPosts = posts.filter(post => 
+        post.title.toLowerCase().includes(searchTerm) ||
+        post.excerpt.toLowerCase().includes(searchTerm) ||
+        post.content.toLowerCase().includes(searchTerm) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchTerm)) ||
+        post.category.toLowerCase().includes(searchTerm)
+      );
+      return res.json(filteredPosts);
+    }
 
     res.json(posts);
   } catch (error) {

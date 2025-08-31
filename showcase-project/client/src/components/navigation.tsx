@@ -33,7 +33,7 @@ export function Navigation() {
   const handleSearch = async (query: string) => {
     try {
       // Search through posts and projects only
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`/api/projects?q=${encodeURIComponent(query)}`);
       
       if (!response.ok) {
         console.error('Search API error:', response.status, response.statusText);
