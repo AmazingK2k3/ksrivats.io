@@ -1,7 +1,12 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import { readFileSync, readdirSync } from 'fs';
+import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
+import { fileURLToPath } from 'url';
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = join(__filename, '..');
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'GET') {
@@ -15,11 +20,31 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const creativesPath = join(process.cwd(), 'content', 'creatives');
+    // Try multiple path strategies for Vercel deployment
+    const possiblePaths = [
+      join(process.cwd(), 'content', 'creatives'),
+      join('/var/task', 'content', 'creatives'),
+      join(__dirname, '..', 'content', 'creatives'),
+      join(__dirname, '..', '..', 'content', 'creatives'),
+      join(process.cwd(), '..', 'content', 'creatives')
+    ];
+    
+    let creativesPath: string | null = null;
+    for (const testPath of possiblePaths) {
+      if (existsSync(testPath)) {
+        creativesPath = testPath;
+        break;
+      }
+    }
+    
+    if (!creativesPath) {
+      return res.status(404).json({ message: 'Content directory not found' });
+    }
+    
     const files = readdirSync(creativesPath);
     
     const creativeFile = files.find(file => {
-      const content = readFileSync(join(creativesPath, file), 'utf-8');
+      const content = readFileSync(join(creativesPath!, file), 'utf-8');
       const { data } = matter(content);
       return data.slug === slug || file.replace('.md', '') === slug;
     });
@@ -28,7 +53,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(404).json({ message: 'Creative not found' });
     }
     
-    const content = readFileSync(join(creativesPath, creativeFile), 'utf-8');
+    const content = readFileSync(join(creativesPath!, creativeFile), 'utf-8');
     const { data, content: markdownContent } = matter(content);
     
     const creative = {
