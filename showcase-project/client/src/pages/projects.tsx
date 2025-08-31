@@ -141,7 +141,7 @@ export default function Projects() {
               Projects & Experiments
             </h1>
             <p className="text-xl text-muted-foreground">
-              Building tools and exploring ideas at the intersection of AI, creativity, and human intelligence
+              Find my various projects here! Note: This is a new website so different project content and info will gradually be updated!
             </p>
           </div>
 

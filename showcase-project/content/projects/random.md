@@ -1,66 +1,25 @@
 ---
-title: "TestingBlog Functionality"
-slug: "testing-blog-functionality"
-date: "2024-12-01"
-tags: ["AI", "research", "industrial-applications"]
-status: "active"
-description: "Leading proof-of-concept research in artificial intelligence applications for industrial automation and smart manufacturing."
+title: "CoinView - Cryptocurrency Exchange App"
+slug: "coinview-crypto-app"
+date: "2024-10-15"
+tags: ["UI/UX", "mobile-design", "cryptocurrency", "fintech", "case-study", "user-experience"]
+category: "Design"
+excerpt: "A comprehensive UX case study for a beginner-friendly cryptocurrency exchange mobile application focused on education and ease of use."
+description: "This application offers a beginner-friendly user experience that offers tutorials and tasks and offer simple free crypto coins for the user to learn about the world of cryptocurrency. The app will use easy-to-understand tools and features and will guide the user in their cryptocurrency journey."
 featured: true
+status: "completed"
+tech_stack: ["UI/UX Design", "User Research", "Wireframing", "Prototyping", "User Journey Mapping"]
+cover: "/coinview.png"
+links:
+  - type: "case-study"
+    url: "https://www.behance.net/gallery/163537461/Coin-View-Cryptocurrency-Exchange-App-Case-Study"
+    label: "View Complete Case Study on Behance"
 ---
-
-## Overview
-
-As an AI POC Research Intern at Siemens, I'm exploring the intersection of consciousness, creativity, and artificial intelligence in industrial applications. This role involves developing proof-of-concept solutions that demonstrate the potential of AI in manufacturing and automation.
 
 ## Project Overview
 
-My research focuses on practical applications of AI in industrial settings, with particular emphasis on:
+CoinView is a comprehensive UX case study for a cryptocurrency exchange mobile application designed specifically for beginners. The project focuses on creating an educational and user-friendly platform that demystifies cryptocurrency trading through intuitive design and guided learning experiences.
 
-- **Computer Vision**: Developing systems for quality control and anomaly detection
-- **Natural Language Processing**: Creating interfaces for human-machine interaction
-- **Predictive Analytics**: Building models for preventive maintenance and optimization
-- **Edge AI**: Implementing AI solutions on industrial edge devices
+---
 
-## Key Responsibilities
-
-### Research & Development
-- Design and implement AI prototypes for industrial use cases
-- Evaluate cutting-edge AI technologies for practical applications
-- Collaborate with engineering teams to integrate AI solutions
-
-### Technical Innovation
-- Explore novel approaches to AI in manufacturing
-- Optimize models for industrial edge environments
-- Develop scalable AI architectures
-
-### Documentation & Presentation
-- Create technical reports and presentations
-- Document best practices and lessons learned
-- Present findings to stakeholders and technical teams
-
-## Technologies Used
-
-The project leverages a modern AI stack:
-- **Python** for core development
-- **TensorFlow & PyTorch** for deep learning models
-- **Computer Vision** libraries for image processing
-- **NLP** frameworks for language understanding
-- **Edge Computing** platforms for deployment
-
-## Impact & Outcomes
-
-This research contributes to Siemens' AI strategy by:
-- Demonstrating practical AI applications in industrial settings
-- Reducing development time for AI implementation
-- Improving operational efficiency through intelligent automation
-- Enabling new business models and services
-
-## Future Directions
-
-The research opens up several promising avenues:
-- Integration with IoT systems for comprehensive industrial intelligence
-- Development of AI-powered digital twins
-- Exploration of human-AI collaboration in manufacturing
-- Investigation of explainable AI for industrial applications
-
-This internship represents a unique opportunity to work at the forefront of industrial AI, combining theoretical understanding with practical implementation in real-world manufacturing environments.
+*View the complete case study with detailed design process, user research, and prototypes on [Behance](https://www.behance.net/gallery/163537461/Coin-View-Cryptocurrency-Exchange-App-Case-Study).*

@@ -180,7 +180,7 @@ export default function CreativesPage() {
                 Creative Corner
               </h1>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                A gallery of artistic explorations, visual experiments, and digital sketches.
+                Random Sketches as a Hobby. Most inspirations are from Pinterest! 
               </p>
             </header>
 
@@ -219,7 +219,7 @@ export default function CreativesPage() {
               Creative Corner
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              A gallery of artistic explorations, visual experiments, and digital sketches.
+              Random Sketches as a Hobby. Most inspirations are from Pinterest! 
             </p>
           </header>
 

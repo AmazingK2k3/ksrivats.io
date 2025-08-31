@@ -60,7 +60,7 @@ export function Footer() {
               <span className="font-sans font-semibold text-lg">Kaushik Srivatsan</span>
             </Link>
             <p className="text-muted-foreground mb-6 max-w-md">
-              Building and creating things of value. AI researcher exploring consciousness, creativity, and the meaningful intersection of technology and human experience.
+              Building and creating things of value. Researcher, Builder & Explorer. Designing responsible technology for our changing world.
             </p>
             
             {/* Social Links - prominently placed */}

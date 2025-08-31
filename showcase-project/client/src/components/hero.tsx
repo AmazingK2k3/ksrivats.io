@@ -11,15 +11,15 @@ export function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-in">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-sans font-bold leading-tight mb-6">
-              <span className="gradient-text">Building and Creating</span>
-              <br />
+              <span className="gradient-text">Researcher. Builder. Wanderer.</span>
+              {/* <br />
               <span className="text-foreground">things of</span>
               <br />
-              <span className="gradient-text">Value</span>
+              <span className="gradient-text">Value</span> */}
             </h1>
             <p className="text-xl sm:text-2xl text-muted-foreground mb-8 leading-relaxed">
-              I'm Kaushik Srivatsan, and this is my digital home. Currently working as an AI POC Research Intern at{" "}
-              <span className="text-primary font-medium">Siemens</span>, exploring the intersection of consciousness, creativity, and artificial intelligence.
+              I'm Kaushik Srivatsan, welcome to my digital home!  I'm a researcher, builder, and explorer working at the intersection of AI, institutions, and society. Currently working in Gen AI R&D at {" "}
+              <span className="text-primary font-medium">Siemens</span>, creating responsible technology for our changing world.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="h-12 px-8">
@@ -29,7 +29,7 @@ export function Hero() {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="h-12 px-8">
-                <Link href="/projects">View Projects</Link>
+                <Link href="/projects">View My Projects</Link>
               </Button>
             </div>
           </div>
@@ -61,13 +61,13 @@ export function QuickNavigation() {
     {
       icon: Sparkles,
       title: "Start Here",
-      description: "Get an overview of my work and interests",
+      description: "Get to know about me, my work and interests!",
       href: "/about",
     },
     {
       icon: Briefcase,
       title: "Tryst with Projects",
-      description: "My project portfolio and technical journey",
+      description: "All my hobby projects & explorations in one place",
       href: "/projects",
     },
     {

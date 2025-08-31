@@ -52,7 +52,7 @@ export default function Blog() {
                 Writing & Essays
               </h1>
               <p className="text-xl text-muted-foreground">
-                Thoughts on AI, philosophy, entrepreneurship, and the future of human creativity
+                Find my articles on various topics here! This is a new website, so content is added gradually. Technical blogs on LLMs, RAGs and GNNs comming soon!
               </p>
             </div>
             
@@ -86,7 +86,7 @@ export default function Blog() {
               Writing & Essays
             </h1>
             <p className="text-xl text-muted-foreground">
-              Thoughts on AI, philosophy, entrepreneurship, and the future of human creativity
+                Find my articles on various topics here! This is a new website, so content is added gradually. Technical blogs on LLMs, RAGs and GNNs comming soon!
             </p>
           </div>
 

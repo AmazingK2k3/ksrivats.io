@@ -1,4 +1,4 @@
-import { BookOpen, Podcast, MessageSquare, Sparkles, Heart, Coffee, Code } from "lucide-react";
+import { BookOpen, Globe, MessageSquare, Sparkles, Heart, Brain, Code, Users, Map, FileText, Lightbulb, Compass } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,46 +10,59 @@ import profilePhoto from "@assets/profile_1752217997980.jpg";
 export default function About() {
   const highlights = [
     {
-      icon: Sparkles,
-      title: "Current Focus",
-      description: "Building thinking machines at Lossfunk",
+      icon: Brain,
+      title: "Current Role",
+      description: "Gen AI R&D at Siemens - Building VLMs, RAG systems, and Computer Vision applications",
       color: "from-primary/20 to-primary/30",
     },
     {
-      icon: MessageSquare,
-      title: "Writing",
-      description: "250+ essays on AI, philosophy, and entrepreneurship",
+      icon: BookOpen,
+      title: "Education",
+      description: "BTech Computing & Data Science + International Relations Minor at Sai University",
       color: "from-accent/20 to-accent/30",
     },
     {
-      icon: BookOpen,
-      title: "Mental Models Book",
-      description: "For startup founders and entrepreneurs",
+      icon: Globe,
+      title: "Current Exploration",
+      description: "Oversquashing on GNNs, Building & Scaling AI/RAG Applications, Responsible AI, AI's impact on institutions, Geopolitics, Economics, and more.",
       color: "from-primary/30 to-primary/40",
     },
     {
-      icon: Podcast,
-      title: "Bold Conjectures",
-      description: "Weekly podcast exploring big ideas",
+      icon: Users,
+      title: "People & Commmunity",
+      description: "Currently Seeking to be part of and build communities, and volunteer for causes!",
       color: "from-accent/30 to-accent/40",
+    },
+    {
+      icon: Map,
+      title: "Career Exploration",
+      description: "Figuring out and exploring my career path and trajectory for the next year and my 20s",
+      color: "from-primary/25 to-primary/35",
+    },
+    {
+      icon: FileText,
+      title: "Resume/CV",
+      description: "Check out my detailed CV and experiences",
+      color: "from-accent/25 to-accent/35",
+      link: "https://docs.google.com/document/d/1bK6rg6eprg2qZWLLNEqUJbXea2VDDhfz642-sAY20c0/edit?usp=sharing",
     },
   ];
 
   const values = [
     {
+      icon: Lightbulb,
+      title: "Building & Creativity",
+      description: "Building, experimenting, and creating imperfect work that feels like play. Being obsessed with learning, solving complex problems, and expressing myself through art, code, and stories.",
+    },
+    {
       icon: Heart,
-      title: "Human-Centered AI",
-      description: "Building AI systems that complement and enhance human capabilities rather than replace them.",
+      title: "People & Stories",
+      description: "Deep listening, understanding perspectives, and believing in genuine appreciation that everyone's story matters.",
     },
     {
-      icon: Coffee,
-      title: "Continuous Learning",
-      description: "Staying curious and constantly exploring new ideas at the intersection of technology and humanity.",
-    },
-    {
-      icon: Code,
-      title: "Open Exploration",
-      description: "Sharing knowledge and insights through writing, speaking, and open-source contributions.",
+      icon: Compass,
+      title: "Mindful Living",
+      description: "Living fully in the present. Embracing uncertainty, trying new things & seeking discomfort for growth. Following gradients of interestingness.",
     },
   ];
 
@@ -64,7 +77,7 @@ export default function About() {
             <div className="w-32 h-32 mx-auto mb-8 rounded-full overflow-hidden shadow-2xl">
               <img
                 src={profilePhoto}
-                alt="Paras Chopra"
+                alt="Kaushik Srivatsan"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -72,7 +85,7 @@ export default function About() {
               About Me
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              I'm passionate about building machines that think and create like humans, exploring the frontiers of AI, consciousness, and human creativity.
+              I'm a researcher, builder, and explorer working at the intersection of AI, institutions, and society—fascinated by how technology reshapes our world.
             </p>
           </div>
 
@@ -82,16 +95,16 @@ export default function About() {
               <div className="prose prose-lg max-w-none">
                 <h2 className="text-3xl font-sans font-bold mb-6">My Journey</h2>
                 <p className="text-muted-foreground mb-6">
-                  I'm currently focused on AI research at <strong className="text-foreground">Lossfunk</strong>, where I explore the fundamental questions about intelligence, consciousness, and creativity. My work sits at the intersection of artificial intelligence, philosophy, and human creativity.
+                  Starting my undergraduate journey post-pandemic, I witnessed firsthand how technology can rapidly transform everything—from education to corporate life. When ChatGPT launched in late 2022, I was among the early student adopters integrating it into my university studies to learn about AI! This sparked my current path in Gen AI R&D at <strong className="text-foreground">Siemens</strong>, where I develop Vision Language Models, RAG systems, and Computer Vision applications solving real-world industrial automation problems.
                 </p>
                 <p className="text-muted-foreground mb-6">
-                  What fascinates me most is not just building AI systems that can perform tasks, but understanding how we can create machines that think and create in ways that complement human intelligence. I believe the future of AI lies not in replacing human creativity, but in amplifying it.
+                  What fascinates me isn't just AI's technical capabilities, but how these technologies reshape geopolitical landscapes and institutions. I've watched in awe and concern as social media, data analytics, and advanced warfare technologies—from drones to AI—rapidly evolved through conflicts like the Taliban takeover in Afghanistan, Myanmar's dictatorship, the Russia-Ukraine war, and the current Israel-Palestine crisis. My interdisciplinary background in Computing & Data Science with International Relations gives me a unique lens for exploring questions at the intersection of technology, people, and society.
                 </p>
                 <p className="text-muted-foreground mb-6">
-                  Beyond my research, I'm passionate about sharing knowledge and insights. I've written over 250 essays on topics ranging from AI and philosophy to entrepreneurship and mental models. I also host the <strong className="text-foreground">Bold Conjectures</strong> podcast, where I explore big ideas with fellow thinkers and creators.
+                  Beyond my current role, I've explored various paths: analyzing competition data at <strong className="text-foreground">e-Yantra, IIT Bombay</strong> (published at T4E 2024), designing a cryptocurrency learning app as a UX intern at Cabot Technology Solutions, and currently experimenting with solving the Over-Squashing Problem in Graph Neural Networks. I also co-founded and helped in designing <strong className="text-foreground">Zeitgeist</strong>, an IR journal exploring war and collective memory, and served as Student Government President, drafting our university's first student constitution.
                 </p>
                 <p className="text-muted-foreground mb-6">
-                  When I'm not working on AI systems, you'll find me maintaining my digital garden of interconnected thoughts, writing about mental models for entrepreneurs, or exploring the philosophical implications of artificial intelligence.
+                  When I'm not engineering or researching, you'll find me reading philosophy, sketching, solving Rubik's cubes, or watching anime :) I'm passionate about connecting with people from diverse backgrounds, always open to new perspectives. As Steve Jobs once said, I'm on a path of exploration, figuring out what I truly love—and I think that's a constant work in progress, just like life itself.
                 </p>
               </div>
             </div>
@@ -99,7 +112,7 @@ export default function About() {
             <div>
               <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                 <CardContent className="p-6">
-                  <h3 className="font-sans font-semibold text-lg mb-6">Current Projects</h3>
+                  <h3 className="font-sans font-semibold text-lg mb-6">TLDR :)</h3>
                   <div className="space-y-4">
                     {highlights.map((highlight) => (
                       <div key={highlight.title} className="flex items-start space-x-3">
@@ -108,7 +121,18 @@ export default function About() {
                         </div>
                         <div>
                           <h4 className="font-sans font-medium text-sm mb-1">
-                            {highlight.title}
+                            {highlight.link ? (
+                              <a 
+                                href={highlight.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-primary hover:underline"
+                              >
+                                {highlight.title}
+                              </a>
+                            ) : (
+                              highlight.title
+                            )}
                           </h4>
                           <p className="text-xs text-muted-foreground">
                             {highlight.description}
@@ -124,7 +148,7 @@ export default function About() {
 
           {/* Values Section */}
           <div className="mb-16">
-            <h2 className="text-3xl font-sans font-bold mb-8 text-center">What I Believe</h2>
+            <h2 className="text-3xl font-sans font-bold mb-8 text-center">What Drives Me</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {values.map((value) => (
                 <Card key={value.title} className="text-center">
@@ -140,20 +164,58 @@ export default function About() {
             </div>
           </div>
 
+          {/* Philosophy Section
+          <div className="mb-16">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl font-sans font-bold mb-8">Philosophy & Inspiration</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <Card className="text-left">
+                  <CardContent className="p-6">
+                    <blockquote className="text-muted-foreground italic mb-4">
+                      "You can't connect the dots looking forward; you can only connect them looking backwards. Follow your gut more. Take pressure off from succeeding—the key aspect is to work on things that are interesting."
+                    </blockquote>
+                    <cite className="text-sm text-primary">— Steve Jobs (paraphrased)</cite>
+                  </CardContent>
+                </Card>
+                <Card className="text-left">
+                  <CardContent className="p-6">
+                    <blockquote className="text-muted-foreground italic mb-4">
+                      "In the end only three things matter: how much you loved, how gently you lived, and how gracefully you let go of things not meant for you."
+                    </blockquote>
+                    <cite className="text-sm text-primary">— Buddha</cite>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="mt-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <blockquote className="text-muted-foreground italic">
+                      "What keeps pushing the world forward is the treasure hunters, the explorers, and people who are quirky about things they work on, not caring about the big goals. The truly great part about exploring what you find fascinating is that even if it doesn't lead to riches, you'd be better off as you would have lived life on your terms."
+                    </blockquote>
+                    <cite className="text-sm text-primary">— Paras Chopra</cite>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div> */}
+
           {/* Skills & Interests */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
             <div>
-              <h2 className="text-2xl font-sans font-bold mb-6">Technical Focus</h2>
+              <h2 className="text-2xl font-sans font-bold mb-6">Technical Expertise</h2>
               <div className="flex flex-wrap gap-2">
                 {[
-                  "Artificial Intelligence",
+                  "Vision Language Models (VLMs)",
+                  "RAG Systems",
+                  "Computer Vision",
+                  "Graph Neural Networks",
                   "Machine Learning",
-                  "Consciousness Research",
-                  "Philosophy of Mind",
-                  "Knowledge Systems",
-                  "Creative AI",
-                  "Human-AI Interaction",
-                  "Digital Gardens",
+                  "Deep Learning",
+                  "Data Analytics",
+                  "Data Science",
+                  "Python",
+                  "AWS",
+                  "NLP"
                 ].map((skill) => (
                   <Badge key={skill} variant="secondary" className="text-sm">
                     {skill}
@@ -163,17 +225,19 @@ export default function About() {
             </div>
 
             <div>
-              <h2 className="text-2xl font-sans font-bold mb-6">Research Interests</h2>
+              <h2 className="text-2xl font-sans font-bold mb-6">Current Interests</h2>
               <div className="flex flex-wrap gap-2">
                 {[
-                  "AI Safety",
-                  "Computational Creativity",
-                  "Epistemology",
-                  "Entrepreneurship",
-                  "Mental Models",
-                  "Systems Thinking",
-                  "Future of Work",
-                  "Technology Ethics",
+                  "AI Research",
+                  "Responsible AI",
+                  "Tech & Public Policy",
+                  "Geopolitics",
+                  "International Relations",
+                  "Mechanistic Interpretability",
+                  "Economics & Financial Markets",
+                  "Product Management & Product Design",
+                  "Startups & Startup Ecosystem",
+                  "Exploring Life, Travel and Communities :)"
                 ].map((interest) => (
                   <Badge key={interest} variant="outline" className="text-sm">
                     {interest}
@@ -187,14 +251,14 @@ export default function About() {
           <div className="text-center">
             <h2 className="text-3xl font-sans font-bold mb-6">Let's Connect</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              I'm always interested in discussing ideas, collaborating on projects, or simply connecting with fellow thinkers.
+              If you're into Research, tech policy, geopolitics, institutions, cinema, anime, community work, or just fun banter—let's connect and explore ideas together.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">
                 <Link href="/contact">Get in Touch</Link>
               </Button>
               <Button asChild variant="outline" size="lg">
-                <Link href="/blog">Read My Writing</Link>
+                <Link href="/projects">Explore My Work</Link>
               </Button>
             </div>
           </div>

@@ -1,32 +1,35 @@
-import { BookOpen, Podcast, MessageSquare, Sparkles } from "lucide-react";
+import { BookOpen, Users, MessageSquare, Sparkles, Globe, Building, Briefcase, GraduationCap, Code, Heart } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export function AboutSection() {
   const highlights = [
     {
-      icon: Sparkles,
+      icon: Briefcase,
       title: "Current Role",
-      description: "AI POC Research Intern at Siemens",
+      description: "Tech Apprentice at Siemens",
       color: "from-primary/20 to-primary/30",
     },
     {
-      icon: BookOpen,
+      icon: GraduationCap,
       title: "Education",
-      description: "Computing & Data Science + International Relations",
+      description: "BTech Computing & Data Science + International Relations",
       color: "from-accent/20 to-accent/30",
     },
     {
-      icon: MessageSquare,
-      title: "Research",
-      description: "AI consciousness, creativity, and meaning",
+      icon: Code,
+      title: "Tech Focus",
+      description: "Mech Interp, VLMs, RAG, Ai Dev, Graph Neural Networks, Tech Policy",
       color: "from-primary/30 to-primary/40",
     },
     {
-      icon: Podcast,
-      title: "Philosophy",
-      description: "Mindfulness, awareness, and moment-to-moment living",
+      icon: Heart,
+      title: "Current Interests",
+      description: "Responsible AI & AI Safety, Geopolitics, Economics, Institutions, Understanding People & Power",
       color: "from-accent/30 to-accent/40",
     },
+
   ];
 
   return (
@@ -39,14 +42,16 @@ export function AboutSection() {
             </h2>
             <div className="prose prose-lg text-muted-foreground space-y-4">
               <p>
-                I'm passionate about building and creating things of value, one moment at a time. My work focuses on the intersection of artificial intelligence, consciousness, and human creativity—optimizing for interestingness rather than conventional metrics.
+                I'm a researcher, builder, and explorer working at the intersection of AI, institutions, and society. Currently at <strong className="text-foreground">Siemens</strong>, I work as an AI engineer developing VLM, RAG, and Computer Vision applications for industrial automation.
               </p>
               <p>
-                Currently at <strong className="text-foreground">Siemens</strong> as an AI POC Research Intern, I explore how AI can augment human creativity and awareness. My academic background combines computing and data science with international relations, giving me a unique perspective on technology's role in society.
+                Beyond engineering, I'm passionate about research across diverse domains—from responsible AI and tech policy to geopolitics and understanding how technology shapes human connection. I co-founded <strong className="text-foreground">Zeitgeist</strong>, an IR journal, and love connecting with people from different backgrounds to challenge my assumptions.
               </p>
-              <p>
-                I write papers, practice mindfulness, and believe in the power of consistency and compounding. My approach is grounded in awareness and peace, finding meaning in the pursuit of creating things I love.
-              </p>
+              <div className="pt-2">
+                <Link href="/about" className="text-primary font-medium hover:underline">
+                  Know more about me →
+                </Link>
+              </div>
             </div>
           </div>
 
