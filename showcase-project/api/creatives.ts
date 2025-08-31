@@ -69,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           tags: data.tags || [],
           category: data.category || 'Art',
           featured: data.featured || false,
-          image: data.image || data.cover,
+          image: data.image ? `/creatives/${data.image}` : data.cover ? `/creatives/${data.cover}` : null,
           createdAt: new Date(data.date || Date.now()),
           updatedAt: new Date(data.date || Date.now())
         };
