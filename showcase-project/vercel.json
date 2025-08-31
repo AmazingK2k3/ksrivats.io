@@ -13,8 +13,22 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/creatives/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|avif))",
+      "dest": "/assets/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
+      "src": "/assets/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|avif))",
+      "dest": "/assets/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
       "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|avif))",
-      "dest": "/$1",
+      "dest": "/assets/$1",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
