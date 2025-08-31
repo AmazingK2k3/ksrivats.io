@@ -9,26 +9,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const contentPath = path.join(process.cwd(), 'content', 'posts');
+    // Try different possible paths for content in Vercel environment
+    const possiblePaths = [
+      path.join(process.cwd(), 'content', 'posts'),
+      path.join(process.cwd(), '..', 'content', 'posts'),
+      path.join(__dirname, '..', '..', 'content', 'posts'),
+      path.join('/var/task', 'content', 'posts')
+    ];
+    
+    let contentPath = '';
+    for (const testPath of possiblePaths) {
+      if (fs.existsSync(testPath)) {
+        contentPath = testPath;
+        break;
+      }
+    }
     
     console.log('Current working directory:', process.cwd());
-    console.log('Content path:', contentPath);
-    console.log('Content path exists:', fs.existsSync(contentPath));
+    console.log('Found content path:', contentPath);
     
-    if (!fs.existsSync(contentPath)) {
-      // Try alternative paths
-      const altPath1 = path.join(process.cwd(), '..', 'content', 'posts');
-      const altPath2 = path.join(__dirname, '..', '..', 'content', 'posts');
-      console.log('Alt path 1:', altPath1, 'exists:', fs.existsSync(altPath1));
-      console.log('Alt path 2:', altPath2, 'exists:', fs.existsSync(altPath2));
-      
+    if (!contentPath || !fs.existsSync(contentPath)) {
       return res.status(404).json({ 
         message: 'Content directory not found',
         debug: {
           cwd: process.cwd(),
-          contentPath,
-          altPath1,
-          altPath2
+          __dirname,
+          testedPaths: possiblePaths.map(p => ({ path: p, exists: fs.existsSync(p) }))
         }
       });
     }

@@ -9,9 +9,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const contentPath = path.join(process.cwd(), 'content', 'posts');
+    // Try different possible paths for content in Vercel environment
+    const possiblePaths = [
+      path.join(process.cwd(), 'content', 'posts'),
+      path.join(process.cwd(), '..', 'content', 'posts'),
+      path.join(__dirname, '..', '..', 'content', 'posts'),
+      path.join('/var/task', 'content', 'posts')
+    ];
     
-    if (!fs.existsSync(contentPath)) {
+    let contentPath = '';
+    for (const testPath of possiblePaths) {
+      if (fs.existsSync(testPath)) {
+        contentPath = testPath;
+        break;
+      }
+    }
+    
+    if (!contentPath) {
       return res.status(404).json({ message: 'Content directory not found' });
     }
 

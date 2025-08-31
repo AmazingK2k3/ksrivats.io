@@ -1,0 +1,7 @@
+# Don't ignore content files - we need them for our API
+!content/
+node_modules/
+.env.local
+.env
+dist/
+*.log
