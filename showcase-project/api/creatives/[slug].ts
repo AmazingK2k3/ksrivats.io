@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { readFileSync, readdirSync, existsSync } from 'fs';
 import { join } from 'path';
 import matter from 'gray-matter';
+import { marked } from 'marked';
 import { fileURLToPath } from 'url';
 
 // ES module equivalent of __dirname
@@ -61,7 +62,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       title: data.title || creativeFile.replace('.md', ''),
       slug: data.slug || creativeFile.replace('.md', ''),
       description: data.description || '',
-      content: markdownContent,
+      content: await marked(markdownContent),
       tags: data.tags || [],
       category: data.category || 'Art',
       featured: data.featured || false,

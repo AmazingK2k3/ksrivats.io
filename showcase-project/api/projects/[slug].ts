@@ -2,6 +2,7 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { marked } from 'marked';
 import { fileURLToPath } from 'url';
 
 // ES module equivalent of __dirname
@@ -78,7 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       order: data.order || 0,
       createdAt: new Date(data.date || Date.now()),
       updatedAt: new Date(data.date || Date.now()),
-      content
+      content: await marked(content)
     };
     
     res.json(project);
