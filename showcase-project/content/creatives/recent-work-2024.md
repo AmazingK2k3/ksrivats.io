@@ -1,6 +1,6 @@
 ---
-title: "Recent Creative Work"
-slug: "recent-work-2024"
+title: "One Piece :)"
+slug: "recent-work-2025"
 tags: ["recent", "digital-art", "illustration"]
 category: "Digital Art"
 featured: true

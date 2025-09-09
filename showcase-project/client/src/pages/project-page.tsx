@@ -1,5 +1,6 @@
 import { useRoute } from "wouter";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ interface Project {
 export default function ProjectPage() {
   const [match, params] = useRoute("/projects/:slug");
   const slug = params?.slug;
+  const [, setLocation] = useLocation();
 
   const { data: project, isLoading } = useQuery<Project>({
     queryKey: ["project", slug],
@@ -55,7 +57,7 @@ export default function ProjectPage() {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
-        <div className="container mx-auto max-w-4xl py-8 pt-20">
+        <div className="container mx-auto max-w-4xl py-8 pt-20 px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-3/4 mb-4"></div>
             <div className="h-4 bg-muted rounded w-1/2 mb-6"></div>
@@ -74,7 +76,7 @@ export default function ProjectPage() {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
-        <div className="container mx-auto max-w-4xl py-8 pt-20">
+        <div className="container mx-auto max-w-4xl py-8 pt-20 px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-4">Project Not Found</h1>
             <p className="text-muted-foreground mb-4">
@@ -98,7 +100,7 @@ export default function ProjectPage() {
     <div className="min-h-screen bg-background">
       <Navigation />
       
-      <div className="container mx-auto max-w-4xl py-8 pt-20">
+      <div className="container mx-auto max-w-4xl py-8 pt-20 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <Link href="/projects">
             <Button variant="outline" size="sm" className="mb-6">
@@ -109,17 +111,22 @@ export default function ProjectPage() {
           
           {/* Cover Image */}
           {imageUrl && (
-            <div className="relative h-64 mb-8 overflow-hidden rounded-lg">
+            <div className="relative h-64 mb-8 overflow-hidden rounded-lg bg-muted flex items-center justify-center">
               <img
                 src={imageUrl}
                 alt={`${project.title} cover`}
-                className="w-full h-full object-cover"
+                className="max-w-full max-h-full object-contain"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4">
                 <div className="flex flex-wrap gap-2">
                   {project.tags?.map((tag: string) => (
-                    <Badge key={tag} variant="secondary" className="backdrop-blur-sm bg-white/20 text-white border-white/30">
+                    <Badge 
+                      key={tag} 
+                      variant="secondary" 
+                      className="backdrop-blur-sm bg-white/20 text-white border-white/30 cursor-pointer hover:bg-white/30 transition-colors"
+                      onClick={() => setLocation(`/projects/tag/${encodeURIComponent(tag)}`)}
+                    >
                       {tag}
                     </Badge>
                   ))}
@@ -132,7 +139,12 @@ export default function ProjectPage() {
           {!imageUrl && (
             <div className="flex flex-wrap gap-2 mb-4">
               {project.tags?.map((tag: string) => (
-                <Badge key={tag} variant="secondary">
+                <Badge 
+                  key={tag} 
+                  variant="secondary"
+                  className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                  onClick={() => setLocation(`/projects/tag/${encodeURIComponent(tag)}`)}
+                >
                   {tag}
                 </Badge>
               ))}

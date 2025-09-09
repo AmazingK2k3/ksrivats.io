@@ -1,5 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRoute, useLocation } from "wouter";
 import { ExternalLink, Github, Lightbulb, Calendar, Search, Filter, Tag } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -45,6 +46,18 @@ export default function Projects() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [location, setLocation] = useLocation();
+  const [match, params] = useRoute("/projects/tag/:tag");
+
+  // If we're on a tag route, set the selected tag
+  useEffect(() => {
+    if (match && params?.tag) {
+      const decodedTag = decodeURIComponent(params.tag);
+      setSelectedTags([decodedTag]);
+    } else if (location === "/projects") {
+      setSelectedTags([]);
+    }
+  }, [match, params, location]);
 
   const { data: projects = [], isLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -85,11 +98,15 @@ export default function Projects() {
   }, [projects, searchQuery, selectedStatus, selectedTags]);
 
   const toggleTag = (tag: string) => {
-    setSelectedTags(prev => 
-      prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
+    if (selectedTags.includes(tag)) {
+      // If tag is already selected, remove it and go back to all projects
+      setSelectedTags([]);
+      setLocation("/projects");
+    } else {
+      // If tag is not selected, navigate to tag page
+      setSelectedTags([tag]);
+      setLocation(`/projects/tag/${encodeURIComponent(tag)}`);
+    }
   };
 
   if (isLoading) {
@@ -181,7 +198,10 @@ export default function Projects() {
               <Button
                 variant={selectedTags.length === 0 ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedTags([])}
+                onClick={() => {
+                  setSelectedTags([]);
+                  setLocation("/projects");
+                }}
               >
                 All Tags
               </Button>
@@ -221,6 +241,8 @@ export default function Projects() {
 }
 
 function ProjectCard({ project, size = "medium" }: { project: Project; size?: "small" | "medium" | "large" | "compact" }) {
+  const [, setLocation] = useLocation();
+  
   const getImageUrl = (coverPath?: string): string | undefined => {
     if (!coverPath) {
       return undefined;
@@ -308,7 +330,15 @@ function ProjectCard({ project, size = "medium" }: { project: Project; size?: "s
             {project.tags && project.tags.length > 0 && size !== "small" && (
               <div className="flex flex-wrap gap-1 mt-auto">
                 {project.tags.slice(0, size === "large" ? 4 : 3).map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
+                  <Badge 
+                    key={tag} 
+                    variant="outline" 
+                    className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setLocation(`/projects/tag/${encodeURIComponent(tag)}`);
+                    }}
+                  >
                     <Tag className="w-3 h-3 mr-1" />
                     {tag}
                   </Badge>
@@ -343,7 +373,15 @@ function ProjectCard({ project, size = "medium" }: { project: Project; size?: "s
           {project.tags && project.tags.length > 0 && size !== "small" && (
             <div className="flex flex-wrap gap-1 mt-auto">
               {project.tags.slice(0, size === "large" ? 4 : 3).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">
+                <Badge 
+                  key={tag} 
+                  variant="outline" 
+                  className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLocation(`/projects/tag/${encodeURIComponent(tag)}`);
+                  }}
+                >
                   <Tag className="w-3 h-3 mr-1" />
                   {tag}
                 </Badge>

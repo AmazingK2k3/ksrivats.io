@@ -205,7 +205,11 @@
 
 .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
   @apply font-sans font-semibold mb-4 mt-8;
-  color: hsl(var(--foreground));
+  color: #461031; /* Purple for light theme */
+}
+
+.dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4, .dark .prose h5, .dark .prose h6 {
+  color: #F9DBBB !important; /* Cream for dark theme */
 }
 
 .prose h1 {

@@ -1,17 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "wouter";
+import { useParams, useLocation } from "wouter";
 import { Calendar, Tag, ArrowLeft, Share2, ExternalLink } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import type { Post } from "@shared/schema";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
+  const { toast } = useToast();
+  const [, setLocation] = useLocation();
   
   const { data: post, isLoading, error } = useQuery<Post>({
     queryKey: ["/api/posts", slug],
@@ -70,19 +73,54 @@ export default function BlogPost() {
   }
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await        navigator.share({
+    const url = window.location.href;
+    
+    try {
+      // Try native sharing first (mobile devices)
+      if (navigator.share) {
+        await navigator.share({
           title: post.title,
           text: post.excerpt || '',
-          url: window.location.href,
+          url: url,
         });
-      } catch (error) {
-        console.log("Share failed:", error);
+        return; // If sharing succeeds, we're done
       }
-    } else {
-      // Fallback to copying URL
-      await navigator.clipboard.writeText(window.location.href);
+    } catch (shareError) {
+      console.log("Native sharing failed, falling back to clipboard");
+    }
+
+    // Fallback to clipboard
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "URL Copied!",
+        description: "The link has been copied to your clipboard.",
+      });
+    } catch (clipboardError) {
+      // Ultimate fallback for older browsers
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        textArea.remove();
+        
+        toast({
+          title: "URL Copied!",
+          description: "The link has been copied to your clipboard.",
+        });
+      } catch (fallbackError) {
+        toast({
+          title: "Share Failed",
+          description: "Unable to copy the URL. Please copy it manually from the address bar.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -127,7 +165,12 @@ export default function BlogPost() {
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-8">
                 {post.tags.map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
+                  <Badge 
+                    key={tag} 
+                    variant="outline" 
+                    className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                    onClick={() => setLocation(`/blog/tag/${encodeURIComponent(tag)}`)}
+                  >
                     <Tag className="w-3 h-3 mr-1" />
                     {tag}
                   </Badge>

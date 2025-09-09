@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRoute, useLocation } from "wouter";
 import { Calendar, Tag, Search } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -15,6 +16,18 @@ export default function Blog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [location, setLocation] = useLocation();
+  const [match, params] = useRoute("/blog/tag/:tag");
+
+  // If we're on a tag route, set the selected tag
+  useEffect(() => {
+    if (match && params?.tag) {
+      const decodedTag = decodeURIComponent(params.tag);
+      setSelectedTag(decodedTag);
+    } else if (location === "/blog") {
+      setSelectedTag("");
+    }
+  }, [match, params, location]);
 
   const { data: posts = [], isLoading } = useQuery<Post[]>({
     queryKey: ["/api/posts"],
@@ -52,7 +65,7 @@ export default function Blog() {
                 Writing & Essays
               </h1>
               <p className="text-xl text-muted-foreground">
-                Find my articles on various topics here! This is a new website, so content is added gradually. Technical blogs on LLMs, RAGs and GNNs comming soon!
+                Find my articles on various topics here! This is a new website, so content is added gradually. Stay tuned for Technical blogs on LLMs, RAGs and GNNs!
               </p>
             </div>
             
@@ -127,7 +140,10 @@ export default function Blog() {
               <Button
                 variant={selectedTag === "" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedTag("")}
+                onClick={() => {
+                  setSelectedTag("");
+                  setLocation("/blog");
+                }}
               >
                 All Tags
               </Button>
@@ -136,7 +152,10 @@ export default function Blog() {
                   key={tag}
                   variant={selectedTag === tag ? "default" : "outline"}
                   size="sm"
-                  onClick={() => setSelectedTag(tag)}
+                  onClick={() => {
+                    setSelectedTag(tag);
+                    setLocation(`/blog/tag/${encodeURIComponent(tag)}`);
+                  }}
                 >
                   <Tag className="w-3 h-3 mr-1" />
                   {tag}
@@ -168,6 +187,8 @@ export default function Blog() {
 }
 
 function BlogCard({ post }: { post: Post }) {
+  const [, setLocation] = useLocation();
+  
   return (
     <Card className="group hover:shadow-xl transition-shadow">
       <CardContent className="p-6">
@@ -194,7 +215,15 @@ function BlogCard({ post }: { post: Post }) {
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {post.tags.slice(0, 3).map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs">
+              <Badge 
+                key={tag} 
+                variant="outline" 
+                className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setLocation(`/blog/tag/${encodeURIComponent(tag)}`);
+                }}
+              >
                 <Tag className="w-3 h-3 mr-1" />
                 {tag}
               </Badge>

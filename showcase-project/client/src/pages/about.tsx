@@ -112,7 +112,7 @@ export default function About() {
             <div>
               <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
                 <CardContent className="p-6">
-                  <h3 className="font-sans font-semibold text-lg mb-6">TLDR :)</h3>
+                  <h3 className="font-sans font-semibold text-xl mb-6">TLDR :)</h3>
                   <div className="space-y-4">
                     {highlights.map((highlight) => (
                       <div key={highlight.title} className="flex items-start space-x-3">
@@ -120,7 +120,7 @@ export default function About() {
                           <highlight.icon className="w-5 h-5 text-primary" />
                         </div>
                         <div>
-                          <h4 className="font-sans font-medium text-sm mb-1">
+                          <h4 className="font-sans font-medium text-base mb-1">
                             {highlight.link ? (
                               <a 
                                 href={highlight.link} 
@@ -134,7 +134,7 @@ export default function About() {
                               highlight.title
                             )}
                           </h4>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-sm text-muted-foreground">
                             {highlight.description}
                           </p>
                         </div>

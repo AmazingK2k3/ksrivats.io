@@ -22,7 +22,7 @@ interface Creative {
 function GalleryItem({ item, style }: { item: Creative; style?: React.CSSProperties }) {
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const [imageError, setImageError] = useState(false);
 
   const getImageUrl = (imagePath: string | undefined): string => {
     // Handle undefined or null imagePath
@@ -40,15 +40,15 @@ function GalleryItem({ item, style }: { item: Creative; style?: React.CSSPropert
     return imagePath;
   };
 
-  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget;
-    setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight });
+  const handleImageLoad = () => {
     setImageLoaded(true);
+    setImageError(false);
   };
 
-  // Calculate aspect ratio for responsive height
-  const aspectRatio = imageDimensions.width > 0 ? imageDimensions.height / imageDimensions.width : 1;
-  const maxHeight = Math.min(500, Math.max(200, aspectRatio * 300)); // Flexible height based on aspect ratio
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoaded(true);
+  };
 
   return (
     <div 
@@ -56,24 +56,32 @@ function GalleryItem({ item, style }: { item: Creative; style?: React.CSSPropert
       style={{
         ...style,
         marginBottom: '20px',
-        breakInside: 'avoid',
-        height: imageLoaded ? 'auto' : '300px'
+        breakInside: 'avoid'
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link href={`/creatives/${item.slug}`}>
         <div className="relative overflow-hidden rounded-lg">
+          {!imageLoaded && !imageError && (
+            <div className="w-full h-48 bg-muted animate-pulse rounded-lg flex items-center justify-center">
+              <div className="text-muted-foreground">Loading...</div>
+            </div>
+          )}
+          {imageError && (
+            <div className="w-full h-48 bg-muted rounded-lg flex items-center justify-center">
+              <div className="text-muted-foreground">Image not found</div>
+            </div>
+          )}
           <img
             src={getImageUrl(item.image)}
             alt={item.title || `Creative work ${item.id}`}
-            className="w-full h-auto object-cover transition-transform duration-500 ease-in-out group-hover:scale-105"
-            loading="lazy"
+            className={`w-full h-auto object-cover transition-transform duration-500 ease-in-out group-hover:scale-105 ${
+              imageLoaded && !imageError ? 'block' : 'hidden'
+            }`}
+            loading="eager"
             onLoad={handleImageLoad}
-            style={{
-              maxHeight: imageLoaded ? 'none' : '300px',
-              minHeight: imageLoaded ? 'auto' : '200px'
-            }}
+            onError={handleImageError}
           />
           {/* Interactive Overlay - Only show if there's title or description */}
           {(item.title || item.description) && (

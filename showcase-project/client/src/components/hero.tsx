@@ -11,15 +11,14 @@ export function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="animate-fade-in">
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-sans font-bold leading-tight mb-6">
-              <span className="gradient-text">Researcher. Builder. Wanderer.</span>
+              <span className="gradient-text">Researcher. Builder. <br /> Explorer.</span>
               {/* <br />
               <span className="text-foreground">things of</span>
               <br />
               <span className="gradient-text">Value</span> */}
             </h1>
             <p className="text-xl sm:text-2xl text-muted-foreground mb-8 leading-relaxed">
-              I'm Kaushik Srivatsan, welcome to my digital home!  I'm a researcher, builder, and explorer working at the intersection of AI, institutions, and society. Currently working in Gen AI R&D at {" "}
-              <span className="text-primary font-medium">Siemens</span>, creating responsible technology for our changing world.
+              I'm Kaushik Srivatsan, welcome to my digital home!  I'm a researcher, builder, and explorer working at the intersection of AI, institutions, and society. Currently working in Gen AI R&D at Siemens, creating responsible technology for our changing world.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="h-12 px-8">

@@ -1,5 +1,5 @@
 ---
-title: "Digital Sketch Collection"
+title: "An old Favorite :)"
 slug: "digital-sketch-2021"
 tags: ["digital-art", "sketch", "illustration"]
 category: "Digital Art"

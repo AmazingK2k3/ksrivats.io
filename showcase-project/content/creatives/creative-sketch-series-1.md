@@ -1,6 +1,6 @@
 ---
-title: "Creative Sketch Series 1"
-slug: "creative-sketch-series-1"
+title: "Sketchbook snaps"
+slug: "sketchbook-snaps"
 tags: ["sketch", "recent", "digital-art"]
 category: "Sketch"
 featured: true
