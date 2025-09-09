@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRoute, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { Calendar, Tag, Search } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -17,17 +17,17 @@ export default function Blog() {
   const [selectedTag, setSelectedTag] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [location, setLocation] = useLocation();
-  const [match, params] = useRoute("/blog/tag/:tag");
 
-  // If we're on a tag route, set the selected tag
+  // Check for tag parameter in URL query string
   useEffect(() => {
-    if (match && params?.tag) {
-      const decodedTag = decodeURIComponent(params.tag);
-      setSelectedTag(decodedTag);
-    } else if (location === "/blog") {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tagParam = urlParams.get('tag');
+    if (tagParam) {
+      setSelectedTag(decodeURIComponent(tagParam));
+    } else {
       setSelectedTag("");
     }
-  }, [match, params, location]);
+  }, [location]);
 
   const { data: posts = [], isLoading } = useQuery<Post[]>({
     queryKey: ["/api/posts"],
@@ -154,7 +154,7 @@ export default function Blog() {
                   size="sm"
                   onClick={() => {
                     setSelectedTag(tag);
-                    setLocation(`/blog/tag/${encodeURIComponent(tag)}`);
+                    setLocation(`/blog?tag=${encodeURIComponent(tag)}`);
                   }}
                 >
                   <Tag className="w-3 h-3 mr-1" />
@@ -221,7 +221,7 @@ function BlogCard({ post }: { post: Post }) {
                 className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
-                  setLocation(`/blog/tag/${encodeURIComponent(tag)}`);
+                  setLocation(`/blog?tag=${encodeURIComponent(tag)}`);
                 }}
               >
                 <Tag className="w-3 h-3 mr-1" />

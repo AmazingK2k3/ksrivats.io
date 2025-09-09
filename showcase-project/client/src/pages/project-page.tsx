@@ -125,7 +125,7 @@ export default function ProjectPage() {
                       key={tag} 
                       variant="secondary" 
                       className="backdrop-blur-sm bg-white/20 text-white border-white/30 cursor-pointer hover:bg-white/30 transition-colors"
-                      onClick={() => setLocation(`/projects/tag/${encodeURIComponent(tag)}`)}
+                      onClick={() => setLocation(`/projects?tag=${encodeURIComponent(tag)}`)}
                     >
                       {tag}
                     </Badge>
@@ -143,7 +143,7 @@ export default function ProjectPage() {
                   key={tag} 
                   variant="secondary"
                   className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                  onClick={() => setLocation(`/projects/tag/${encodeURIComponent(tag)}`)}
+                  onClick={() => setLocation(`/projects?tag=${encodeURIComponent(tag)}`)}
                 >
                   {tag}
                 </Badge>

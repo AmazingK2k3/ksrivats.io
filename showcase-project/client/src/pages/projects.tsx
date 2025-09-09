@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRoute, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { ExternalLink, Github, Lightbulb, Calendar, Search, Filter, Tag } from "lucide-react";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -47,17 +47,17 @@ export default function Projects() {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [location, setLocation] = useLocation();
-  const [match, params] = useRoute("/projects/tag/:tag");
 
-  // If we're on a tag route, set the selected tag
+  // Check for tag parameter in URL query string
   useEffect(() => {
-    if (match && params?.tag) {
-      const decodedTag = decodeURIComponent(params.tag);
-      setSelectedTags([decodedTag]);
-    } else if (location === "/projects") {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tagParam = urlParams.get('tag');
+    if (tagParam) {
+      setSelectedTags([decodeURIComponent(tagParam)]);
+    } else {
       setSelectedTags([]);
     }
-  }, [match, params, location]);
+  }, [location]);
 
   const { data: projects = [], isLoading } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -103,9 +103,9 @@ export default function Projects() {
       setSelectedTags([]);
       setLocation("/projects");
     } else {
-      // If tag is not selected, navigate to tag page
+      // If tag is not selected, navigate to tag page with query parameter
       setSelectedTags([tag]);
-      setLocation(`/projects/tag/${encodeURIComponent(tag)}`);
+      setLocation(`/projects?tag=${encodeURIComponent(tag)}`);
     }
   };
 
@@ -336,7 +336,7 @@ function ProjectCard({ project, size = "medium" }: { project: Project; size?: "s
                     className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
                     onClick={(e) => {
                       e.preventDefault();
-                      setLocation(`/projects/tag/${encodeURIComponent(tag)}`);
+                      setLocation(`/projects?tag=${encodeURIComponent(tag)}`);
                     }}
                   >
                     <Tag className="w-3 h-3 mr-1" />
@@ -379,7 +379,7 @@ function ProjectCard({ project, size = "medium" }: { project: Project; size?: "s
                   className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
                   onClick={(e) => {
                     e.preventDefault();
-                    setLocation(`/projects/tag/${encodeURIComponent(tag)}`);
+                    setLocation(`/projects?tag=${encodeURIComponent(tag)}`);
                   }}
                 >
                   <Tag className="w-3 h-3 mr-1" />

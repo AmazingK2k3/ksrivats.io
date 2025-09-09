@@ -169,7 +169,7 @@ export default function BlogPost() {
                     key={tag} 
                     variant="outline" 
                     className="text-xs cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
-                    onClick={() => setLocation(`/blog/tag/${encodeURIComponent(tag)}`)}
+                    onClick={() => setLocation(`/blog?tag=${encodeURIComponent(tag)}`)}
                   >
                     <Tag className="w-3 h-3 mr-1" />
                     {tag}
