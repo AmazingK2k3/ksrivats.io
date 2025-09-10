@@ -17,7 +17,11 @@ export function usePost(slug: string) {
 
 export function useFeaturedPosts() {
   return useQuery({
-    queryKey: ["/api/posts/featured"],
+    queryKey: ["/api/posts", "featured"],
+    queryFn: async () => {
+      const response = await fetch('/api/posts?featured=true');
+      return response.json();
+    },
   });
 }
 
@@ -36,7 +40,11 @@ export function useProject(slug: string) {
 
 export function useFeaturedProjects() {
   return useQuery({
-    queryKey: ["/api/projects/featured"],
+    queryKey: ["/api/projects", "featured"],
+    queryFn: async () => {
+      const response = await fetch('/api/projects?featured=true');
+      return response.json();
+    },
   });
 }
 

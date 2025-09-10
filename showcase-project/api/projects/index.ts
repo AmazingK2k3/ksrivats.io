@@ -14,9 +14,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  // Check if this is a global search request
-  const searchQuery = req.query.q;
-  const isGlobalSearch = searchQuery && typeof searchQuery === 'string';
+  // Check if this is a featured projects request
+  const featuredOnly = req.query.featured === 'true';
 
   try {
     // Try multiple path strategies for Vercel deployment
@@ -79,56 +78,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
       .sort((a, b) => b.order - a.order);
 
-    // If this is a global search request, also search posts and return combined results
-    if (isGlobalSearch) {
-      const searchTerm = searchQuery.toLowerCase();
-      
-      // Filter projects
-      const filteredProjects = projects.filter(project => 
-        project.title.toLowerCase().includes(searchTerm) ||
-        project.description.toLowerCase().includes(searchTerm) ||
-        project.content.toLowerCase().includes(searchTerm) ||
-        project.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm)) ||
-        project.tech.some((tech: string) => tech.toLowerCase().includes(searchTerm))
-      ).map(p => ({ ...p, type: 'project' }));
-
-      // Also search posts
-      let posts: any[] = [];
-      const postsPath = path.join(process.cwd(), 'content', 'posts');
-      if (fs.existsSync(postsPath)) {
-        const postFiles = fs.readdirSync(postsPath);
-        posts = postFiles
-          .filter(file => file.endsWith('.md'))
-          .map((file, index) => {
-            const filePath = path.join(postsPath, file);
-            const fileContent = fs.readFileSync(filePath, 'utf8');
-            const { data, content } = matter(fileContent);
-            
-            return {
-              id: index + 1,
-              title: data.title,
-              slug: data.slug || file.replace('.md', ''),
-              excerpt: data.excerpt || content.substring(0, 200) + '...',
-              tags: data.tags || [],
-              category: data.category || 'General',
-              published: data.published !== false,
-              featured: data.featured || false,
-              publishedAt: new Date(data.date),
-              content,
-              type: 'post'
-            };
-          })
-          .filter(post => post.published)
-          .filter(post => 
-            post.title.toLowerCase().includes(searchTerm) ||
-            post.excerpt.toLowerCase().includes(searchTerm) ||
-            post.content.toLowerCase().includes(searchTerm) ||
-            post.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm)) ||
-            post.category.toLowerCase().includes(searchTerm)
-          );
-      }
-
-      return res.json([...filteredProjects, ...posts]);
+    // If this is a featured projects request, filter for featured projects
+    if (featuredOnly) {
+      const featuredProjects = projects.filter(project => project.featured);
+      return res.json(featuredProjects);
     }
 
     res.json(projects);

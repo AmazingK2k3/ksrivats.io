@@ -32,8 +32,8 @@ export function Navigation() {
 
   const handleSearch = async (query: string) => {
     try {
-      // Search through posts and projects only
-      const response = await fetch(`/api/projects?q=${encodeURIComponent(query)}`);
+      // Use the dedicated search endpoint
+      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
       
       if (!response.ok) {
         console.error('Search API error:', response.status, response.statusText);
@@ -43,10 +43,11 @@ export function Navigation() {
       const data = await response.json();
       console.log('Search API response:', data);
       
-      // Handle the new consolidated API format where data is a flat array with type property
+      // Handle the search API format
       const searchResults = data.map((item: any) => ({
         id: `${item.type}-${item.id}`,
         title: item.title,
+        excerpt: item.excerpt || item.description || '',
         type: item.type,
         url: `/${item.type === 'post' ? 'blog' : 'projects'}/${item.slug}`
       }));

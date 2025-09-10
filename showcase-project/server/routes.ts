@@ -50,7 +50,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Search query is required" });
       }
       const results = await storage.searchAll(query);
-      res.json(results);
+      
+      // Flatten the results to match the Vercel API format
+      const flatResults = [
+        ...results.posts.map(post => ({ ...post, type: 'post' })),
+        ...results.projects.map(project => ({ ...project, type: 'project' })),
+        ...results.creatives.map(creative => ({ ...creative, type: 'creative' }))
+      ];
+      
+      res.json(flatResults);
     } catch (error) {
       res.status(500).json({ message: "Failed to perform search" });
     }

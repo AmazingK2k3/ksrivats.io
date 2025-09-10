@@ -16,6 +16,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Check if this is a search request
   const searchQuery = req.query.q;
   const isSearch = searchQuery && typeof searchQuery === 'string';
+  
+  // Check if this is a featured posts request
+  const featuredOnly = req.query.featured === 'true';
 
   try {
     // Try different possible paths for content in Vercel environment
@@ -84,6 +87,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         post.category.toLowerCase().includes(searchTerm)
       );
       return res.json(filteredPosts);
+    }
+
+    // If this is a featured posts request, filter for featured posts
+    if (featuredOnly) {
+      const featuredPosts = posts.filter(post => post.featured);
+      return res.json(featuredPosts);
     }
 
     res.json(posts);
