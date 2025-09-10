@@ -23,17 +23,8 @@ export function resolveImagePath(imagePath: string, contentType?: 'project' | 'c
   
   switch (contentType) {
     case 'project':
-      // Projects can be in /data/ subdirectory or root public
-      if (imagePath.includes('/')) {
-        basePath = '/';
-      } else {
-        // Check if it's likely a data project image
-        if (imagePath.toLowerCase().includes('data') || imagePath.toLowerCase().includes('project')) {
-          basePath = '/data/';
-        } else {
-          basePath = '/';
-        }
-      }
+      // Projects are in root public directory
+      basePath = '/';
       break;
       
     case 'creative':
