@@ -14,19 +14,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Posts endpoints
   app.get("/api/posts", async (req, res) => {
     try {
-      const posts = await storage.getPosts();
+      const featuredOnly = req.query.featured === 'true';
+      const posts = featuredOnly ? await storage.getFeaturedPosts() : await storage.getPosts();
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch posts" });
-    }
-  });
-
-  app.get("/api/posts/featured", async (req, res) => {
-    try {
-      const posts = await storage.getFeaturedPosts();
-      res.json(posts);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch featured posts" });
     }
   });
 
@@ -116,21 +108,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/projects", async (req, res) => {
     console.log('GET /api/projects called');
     try {
-      const projects = await storage.getProjects();
+      const featuredOnly = req.query.featured === 'true';
+      const projects = featuredOnly ? await storage.getFeaturedProjects() : await storage.getProjects();
       console.log(`Returning ${projects.length} projects`);
       res.json(projects);
     } catch (error) {
       console.error('Error fetching projects:', error);
       res.status(500).json({ message: "Failed to fetch projects" });
-    }
-  });
-
-  app.get("/api/projects/featured", async (req, res) => {
-    try {
-      const projects = await storage.getFeaturedProjects();
-      res.json(projects);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch featured projects" });
     }
   });
 

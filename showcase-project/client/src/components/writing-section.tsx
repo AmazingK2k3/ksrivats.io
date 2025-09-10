@@ -9,7 +9,8 @@ import type { Post } from "@shared/schema";
 
 export function WritingSection() {
   const { data: posts = [], isLoading } = useQuery<Post[]>({
-    queryKey: ["/api/posts/featured"],
+    queryKey: ["/api/posts", { featured: true }],
+    queryFn: () => fetch("/api/posts?featured=true").then(res => res.json()),
   });
 
   if (isLoading) {

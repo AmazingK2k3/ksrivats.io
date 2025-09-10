@@ -23,7 +23,8 @@ interface Project {
 
 export function ProjectsSection() {
   const { data: projects = [], isLoading } = useQuery<Project[]>({
-    queryKey: ["/api/projects/featured"],
+    queryKey: ["/api/projects", { featured: true }],
+    queryFn: () => fetch("/api/projects?featured=true").then(res => res.json()),
   });
 
   if (isLoading) {

@@ -1,5 +1,5 @@
 // Quick test of asset resolution
-import { resolveImagePath } from './api/utils/assets.js';
+import { resolveImagePath } from './api/utils/assets.ts';
 
 console.log('Testing asset resolution:');
 console.log('/data_projects.png ->', resolveImagePath('/data_projects.png'));

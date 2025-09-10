@@ -22,7 +22,8 @@ export default function BlogPost() {
   });
 
   const { data: relatedPosts = [] } = useQuery<Post[]>({
-    queryKey: ["/api/posts/featured"],
+    queryKey: ["/api/posts", { featured: true }],
+    queryFn: () => fetch("/api/posts?featured=true").then(res => res.json()),
     enabled: !!post,
   });
 
