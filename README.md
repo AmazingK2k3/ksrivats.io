@@ -1,4 +1,4 @@
-# Kaushik Srivatsan's Portfolio Website
+# My Portfolio Website
 
 This repository contains my **portfolio website** built with modern web technologies, showcasing my projects, creative works, technical writing, and professional journey.
 
