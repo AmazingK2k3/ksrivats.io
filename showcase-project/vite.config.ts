@@ -13,6 +13,16 @@ export default defineConfig(async ({ mode }) => {
   const supabaseUrl = fileEnv.VITE_SUPABASE_URL || process.env.SUPABASE_URL || '';
   const supabaseAnonKey = fileEnv.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '';
 
+  // Debug: log which env vars are available during Vercel build (remove after confirming)
+  console.log('[vite-config] Supabase env debug:', {
+    'fileEnv.VITE_SUPABASE_URL': fileEnv.VITE_SUPABASE_URL ? 'SET' : 'EMPTY',
+    'process.env.SUPABASE_URL': process.env.SUPABASE_URL ? 'SET' : 'EMPTY',
+    'process.env.VITE_SUPABASE_URL': process.env.VITE_SUPABASE_URL ? 'SET' : 'EMPTY',
+    'process.env.NEXT_PUBLIC_SUPABASE_URL': process.env.NEXT_PUBLIC_SUPABASE_URL ? 'SET' : 'EMPTY',
+    'resolved supabaseUrl': supabaseUrl ? 'SET' : 'EMPTY',
+    'resolved supabaseAnonKey': supabaseAnonKey ? 'SET' : 'EMPTY',
+  });
+
   return {
     plugins: [
       react(),
