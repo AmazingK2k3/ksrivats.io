@@ -1,7 +1,12 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+// These globals are injected by vite.config.ts define block
+// They resolve VITE_SUPABASE_URL (local) or SUPABASE_URL (Vercel integration)
+declare const __SUPABASE_URL__: string;
+declare const __SUPABASE_ANON_KEY__: string;
+
+const supabaseUrl = __SUPABASE_URL__ || undefined;
+const supabaseAnonKey = __SUPABASE_ANON_KEY__ || undefined;
 
 export const supabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
