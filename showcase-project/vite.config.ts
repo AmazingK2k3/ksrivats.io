@@ -19,6 +19,16 @@ export default defineConfig({
         ]
       : []),
   ],
+  define: {
+    // Map Supabase-Vercel integration env vars to the VITE_ names used in client code
+    // Falls back gracefully: VITE_ vars (from .env.local) take priority, then integration vars
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(
+      process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL ?? ''
+    ),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(
+      process.env.VITE_SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY ?? ''
+    ),
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "client", "src"),
