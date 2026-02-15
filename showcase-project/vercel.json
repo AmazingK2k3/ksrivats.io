@@ -27,6 +27,13 @@
       }
     },
     {
+      "src": "/(blog-images|project-images)/(.*)",
+      "dest": "/$1/$2",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      }
+    },
+    {
       "src": "/(.*\\.(png|jpg|jpeg|gif|svg|ico|webp|avif))",
       "dest": "/assets/$1",
       "headers": {

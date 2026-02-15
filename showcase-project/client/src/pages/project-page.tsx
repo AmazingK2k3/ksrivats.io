@@ -8,6 +8,7 @@ import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import { Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import { Comments } from "@/components/comments";
 
 interface Project {
   id: number;
@@ -194,8 +195,11 @@ export default function ProjectPage() {
           <div className="prose prose-lg max-w-none mb-16">
             <div dangerouslySetInnerHTML={{ __html: project.content }} />
           </div>
+
+          {/* Comments */}
+          <Comments postSlug={project.slug} postType="project" />
         </div>
-        
+
       </div>
       
       <Footer />

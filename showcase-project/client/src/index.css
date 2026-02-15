@@ -256,7 +256,79 @@
 }
 
 .prose img {
-  @apply rounded-lg shadow-lg my-6;
+  @apply rounded-lg shadow-lg my-6 mx-auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Image captions: ![alt](src) followed by *caption text* */
+.prose img + em,
+.prose p:has(> img) + p > em:only-child {
+  @apply block text-center text-sm mt-2 not-italic;
+  color: hsl(var(--muted-foreground));
+}
+
+.prose video {
+  @apply rounded-lg shadow-lg my-6 mx-auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Citation markers in prose */
+.citation-ref {
+  @apply text-primary font-semibold cursor-pointer;
+  font-size: 0.85em;
+  vertical-align: super;
+  line-height: 0;
+  padding: 0 2px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  border-radius: 2px;
+}
+
+.citation-ref:hover {
+  color: hsl(var(--primary) / 0.8);
+  text-decoration: underline;
+  background-color: hsl(var(--accent));
+}
+
+/* Citation card */
+.citation-card {
+  @apply border rounded-lg shadow-md p-3;
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+  max-width: 220px;
+  font-size: 0.8rem;
+}
+
+.citation-card-pinned {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: hsl(var(--primary));
+}
+
+.citation-card-enter {
+  animation: fadeSlideIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Highlight animation when scrolling to a reference */
+.citation-highlight {
+  animation: refHighlight 2s ease-out;
+  border-radius: 4px;
+}
+
+@keyframes refHighlight {
+  0% { background-color: hsl(var(--primary) / 0.2); }
+  100% { background-color: transparent; }
 }
 
 .prose strong {

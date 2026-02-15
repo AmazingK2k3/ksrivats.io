@@ -69,7 +69,7 @@ async function parseMarkdown(content: string): Promise<ParsedMarkdown> {
   // Convert markdown to HTML
   const processedContent = await remark()
     .use(remarkGfm)
-    .use(remarkHtml)
+    .use(remarkHtml, { sanitize: false })
     .process(markdownContent);
   
   const htmlContent = processedContent.toString();

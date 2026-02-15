@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "wouter";
 import { format } from "date-fns";
 import type { Post } from "@shared/schema";
+import { CitationProcessor } from "@/components/citation-processor";
+import { Comments } from "@/components/comments";
 
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -187,10 +189,14 @@ export default function BlogPost() {
             </div>
           </header>
 
-          {/* Post Content */}
-          <div className="prose prose-lg max-w-none mb-16">
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
-          </div>
+          {/* Post Content with Citation Support */}
+          <CitationProcessor
+            htmlContent={post.content}
+            className="prose prose-lg max-w-none mb-16"
+          />
+
+          {/* Comments */}
+          <Comments postSlug={post.slug} postType="post" />
 
           {/* Related Posts */}
           {relatedPosts.length > 0 && (
