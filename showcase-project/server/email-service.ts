@@ -158,6 +158,92 @@ class EmailService {
     }
   }
 
+  async sendCommentNotification(data: {
+    postSlug: string;
+    postType: string;
+    authorName: string;
+    authorEmail: string;
+    content: string;
+  }): Promise<boolean> {
+    if (!this.initialized || !this.transporter) {
+      console.log('Email service not available - skipping comment notification');
+      return false;
+    }
+
+    try {
+      const escapedName = escapeHtml(data.authorName);
+      const escapedEmail = escapeHtml(data.authorEmail);
+      const escapedContent = escapeHtml(data.content);
+      const postTypeLabel = data.postType === 'post' ? 'Blog Post' : 'Project';
+
+      const mailOptions = {
+        from: process.env.SMTP_USER || 'noreply@portfolio.com',
+        to: 'kaushiksrivatsan03@gmail.com',
+        subject: `New Comment on ${postTypeLabel}: ${data.postSlug}`,
+        html: `
+          <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+            <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 30px; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">New Comment on Your ${postTypeLabel}!</h1>
+              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">${data.postSlug}</p>
+            </div>
+
+            <div style="padding: 30px;">
+              <div style="background-color: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #3b82f6;">
+                <h2 style="color: #1e293b; margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">Commenter Information</h2>
+                <div style="margin-bottom: 15px;">
+                  <strong style="color: #475569; font-size: 14px;">Name:</strong>
+                  <div style="color: #1e293b; font-size: 16px; margin-top: 5px;">${escapedName}</div>
+                </div>
+                <div>
+                  <strong style="color: #475569; font-size: 14px;">Email:</strong>
+                  <div style="margin-top: 5px;">
+                    <a href="mailto:${data.authorEmail}" style="color: #3b82f6; text-decoration: none; font-size: 16px;">${escapedEmail}</a>
+                  </div>
+                </div>
+              </div>
+
+              <div style="background-color: #ffffff; padding: 25px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 25px;">
+                <h2 style="color: #1e293b; margin: 0 0 15px 0; font-size: 18px; font-weight: 600;">Comment</h2>
+                <div style="color: #475569; line-height: 1.6; font-size: 15px; white-space: pre-line;">${escapedContent}</div>
+              </div>
+
+              <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 20px; border-radius: 12px; text-align: center;">
+                <p style="color: white; margin: 0; font-size: 14px;">
+                  Visit your site to respond or moderate this comment
+                </p>
+              </div>
+            </div>
+
+            <footer style="background-color: #f1f5f9; padding: 20px; text-align: center; border-top: 1px solid #e2e8f0;">
+              <p style="color: #64748b; margin: 0; font-size: 12px;">
+                This email was automatically generated from your portfolio comment system.
+              </p>
+              <p style="color: #64748b; margin: 5px 0 0 0; font-size: 12px;">
+                Timestamp: ${new Date().toLocaleString('en-US', {
+                  timeZone: 'UTC',
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })} UTC
+              </p>
+            </footer>
+          </div>
+        `,
+        replyTo: data.authorEmail,
+      };
+
+      await this.transporter.sendMail(mailOptions);
+      console.log(`Comment notification sent for ${data.postSlug}`);
+      return true;
+    } catch (error) {
+      console.error('Failed to send comment notification:', error);
+      return false;
+    }
+  }
+
   isInitialized(): boolean {
     return this.initialized;
   }

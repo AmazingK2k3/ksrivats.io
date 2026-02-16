@@ -23,6 +23,9 @@ export function Comments({ postSlug, postType }: CommentsProps) {
   const [message, setMessage] = useState("");
   const [honeypot, setHoneypot] = useState("");
 
+  // Site owner email for author badge (from env var)
+  const siteOwnerEmail = import.meta.env.VITE_SITE_OWNER_EMAIL as string | undefined;
+
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", postSlug, postType],
     queryFn: async () => {
@@ -43,13 +46,8 @@ export function Comments({ postSlug, postType }: CommentsProps) {
 
   const submitComment = useMutation({
     mutationFn: async () => {
-      if (!supabase) {
+      if (!supabaseConfigured) {
         throw new Error("Comments are not configured yet.");
-      }
-
-      if (honeypot) {
-        // Silently reject bot submissions
-        return;
       }
 
       const lastSubmit = localStorage.getItem("lastCommentTime");
@@ -57,17 +55,28 @@ export function Comments({ postSlug, postType }: CommentsProps) {
         throw new Error("Please wait a minute between comments.");
       }
 
-      const { error } = await supabase.from("comments").insert({
-        post_slug: postSlug,
-        post_type: postType,
-        author_name: name.trim(),
-        author_email: email.trim() || null,
-        content: message.trim(),
-        status: "approved",
-        website: "",
+      // Submit comment via API endpoint (handles Supabase insert + email notification)
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "comment",
+          name: name.trim(),
+          email: email.trim(),
+          message: message.trim(),
+          postSlug,
+          postType,
+          honeypot,
+        }),
       });
 
-      if (error) throw error;
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.message || "Failed to submit comment");
+      }
+
       localStorage.setItem("lastCommentTime", String(Date.now()));
     },
     onSuccess: () => {
@@ -115,21 +124,31 @@ export function Comments({ postSlug, postType }: CommentsProps) {
             ))}
           </div>
         )}
-        {comments.map((comment) => (
-          <Card key={comment.id} className="bg-card">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-semibold text-sm font-sans">
-                  {comment.author_name}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {format(new Date(comment.created_at), "MMM d, yyyy")}
-                </span>
-              </div>
-              <p className="text-sm leading-relaxed">{comment.content}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {comments.map((comment) => {
+          const isAuthor = siteOwnerEmail && comment.author_email?.toLowerCase() === siteOwnerEmail.toLowerCase();
+          return (
+            <Card key={comment.id} className="bg-card">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold text-sm font-sans">
+                      {comment.author_name}
+                    </span>
+                    {isAuthor && (
+                      <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
+                        Author
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs text-muted-foreground">
+                    {format(new Date(comment.created_at), "MMM d, yyyy")}
+                  </span>
+                </div>
+                <p className="text-sm leading-relaxed">{comment.content}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
         {comments.length === 0 && !isLoading && supabaseConfigured && (
           <p className="text-muted-foreground text-center py-8">
             No comments yet. Be the first to share your thoughts!

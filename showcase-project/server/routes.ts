@@ -5,6 +5,7 @@ import { insertPostSchema, insertProjectSchema, insertContactSchema } from "@sha
 import { emailService } from "./email-service";
 import { checkRateLimit, getClientIP, validateContactData, detectSpam } from "./security";
 import { z } from "zod";
+import { createClient } from '@supabase/supabase-js';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   
@@ -179,17 +180,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Contact endpoints
+  // Contact endpoints (handles both contact form and comments)
   app.post("/api/contact", async (req, res) => {
     try {
+      const { type, honeypot } = req.body;
+
+      // Route to comment handler if type is 'comment'
+      if (type === 'comment') {
+        // Honeypot check for comments
+        if (honeypot) {
+          return res.status(200).json({ message: 'Comment submitted successfully' });
+        }
+
+        const { name, email, message, postSlug, postType } = req.body;
+
+        // Basic validation for comments
+        if (!name || !email || !message || !postSlug || !postType) {
+          return res.status(400).json({ message: 'All fields are required' });
+        }
+
+        // Initialize Supabase client
+        const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.VITE_SUPABASE_ANON_KEY;
+
+        if (!supabaseUrl || !supabaseKey) {
+          console.error('Supabase credentials not configured');
+          return res.status(500).json({ message: 'Comments are not configured' });
+        }
+
+        const supabase = createClient(supabaseUrl, supabaseKey);
+
+        // Insert comment into Supabase
+        const { data: insertData, error: insertError } = await supabase.from('comments').insert({
+          post_slug: postSlug,
+          post_type: postType,
+          author_name: name.trim(),
+          author_email: email.trim(),
+          content: message.trim(),
+          status: 'approved',
+          website: '',
+        }).select();
+
+        if (insertError) {
+          console.error('Error inserting comment:', insertError);
+          return res.status(500).json({ message: 'Failed to submit comment' });
+        }
+
+        // Send email notification for comment
+        try {
+          await emailService.sendCommentNotification({
+            postSlug,
+            postType,
+            authorName: name.trim(),
+            authorEmail: email.trim(),
+            content: message.trim(),
+          });
+        } catch (emailError) {
+          console.error('Failed to send comment email notification:', emailError);
+        }
+
+        return res.status(201).json({ message: 'Comment submitted successfully' });
+      }
+
+      // Original contact form handling below
       // Get client IP for rate limiting
       const clientIP = getClientIP(req);
-      
+
       // Check rate limit
       const rateLimit = checkRateLimit(clientIP);
       if (!rateLimit.allowed) {
         const resetTime = new Date(rateLimit.resetTime!);
-        return res.status(429).json({ 
+        return res.status(429).json({
           message: "Too many requests. Please try again later.",
           resetTime: resetTime.toISOString()
         });
@@ -198,9 +259,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Validate and sanitize input
       const validation = validateContactData(req.body);
       if (!validation.isValid) {
-        return res.status(400).json({ 
-          message: "Invalid input", 
-          errors: validation.errors 
+        return res.status(400).json({
+          message: "Invalid input",
+          errors: validation.errors
         });
       }
 

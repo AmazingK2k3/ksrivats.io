@@ -9,6 +9,7 @@ import { Link } from "wouter";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Comments } from "@/components/comments";
+import { Upvotes } from "@/components/upvotes";
 
 interface Project {
   id: number;
@@ -195,6 +196,9 @@ export default function ProjectPage() {
           <div className="prose prose-lg max-w-none mb-16">
             <div dangerouslySetInnerHTML={{ __html: project.content }} />
           </div>
+
+          {/* Upvotes */}
+          <Upvotes postSlug={project.slug} postType="project" />
 
           {/* Comments */}
           <Comments postSlug={project.slug} postType="project" />
