@@ -5,6 +5,7 @@ import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import remarkHtml from 'remark-html';
 import type { Post, Project, InsertPost, InsertProject } from '@shared/schema';
+import { preprocessMarkdown, postprocessHtml } from '@shared/markdown-utils';
 
 // Define the project status type
 type ProjectStatus = 'current' | 'completed' | 'archived';
@@ -31,6 +32,7 @@ interface MarkdownFrontMatter {
   category?: string;
   excerpt?: string;
   featured?: boolean;
+  hidden?: boolean;
   status?: string;
   tech_stack?: string[];
   tech?: string[]; // Added for technical stack
@@ -57,22 +59,18 @@ interface ParsedMarkdown {
 
 async function parseMarkdown(content: string): Promise<ParsedMarkdown> {
   const { data, content: markdownContent } = matter(content);
-  
-  // Debug zeitgeist specifically
-  if (data.title === "Zeitgeist Magazine") {
-    console.log(`Debug Zeitgeist - Raw content first 200 chars:`);
-    console.log(content.substring(0, 200));
-    console.log(`Debug Zeitgeist - Parsed data:`, data);
-    console.log(`Debug Zeitgeist - Cover field:`, data.cover);
-  }
-  
+
+  // Pre-process: ==highlight==, math placeholders
+  const preprocessed = preprocessMarkdown(markdownContent);
+
   // Convert markdown to HTML
   const processedContent = await remark()
     .use(remarkGfm)
     .use(remarkHtml, { sanitize: false })
-    .process(markdownContent);
-  
-  const htmlContent = processedContent.toString();
+    .process(preprocessed);
+
+  // Post-process: callout boxes
+  const htmlContent = postprocessHtml(processedContent.toString());
 
   return {
     frontMatter: data as MarkdownFrontMatter,
@@ -118,21 +116,22 @@ export async function loadPosts(): Promise<Post[]> {
   console.log(`Loading posts from: ${postsPath}`);
   const markdownFiles = await loadMarkdownFiles(postsPath);
   
-  const posts = markdownFiles.map((file, index) => ({
-    id: index + 1,
-    title: file.frontMatter.title,
-    slug: file.frontMatter.slug,
-    content: file.htmlContent,
-    excerpt: file.frontMatter.excerpt || '',
-    tags: file.frontMatter.tags || [],
-    category: file.frontMatter.category || 'General',
-    published: true,
-    featured: file.frontMatter.featured || false,
-    publishedAt: new Date(file.frontMatter.date),
-    createdAt: new Date(file.frontMatter.date),
-    updatedAt: new Date(file.frontMatter.date),
-  }));
-  
+  const posts = markdownFiles
+    .map((file, index) => ({
+      id: index + 1,
+      title: file.frontMatter.title,
+      slug: file.frontMatter.slug,
+      content: file.htmlContent,
+      excerpt: file.frontMatter.excerpt || '',
+      tags: file.frontMatter.tags || [],
+      category: file.frontMatter.category || 'General',
+      published: !file.frontMatter.hidden,  // hidden posts are unpublished in storage
+      featured: file.frontMatter.featured || false,
+      publishedAt: new Date(file.frontMatter.date),
+      createdAt: new Date(file.frontMatter.date),
+      updatedAt: new Date(file.frontMatter.date),
+    }));
+
   console.log(`Loaded ${posts.length} posts`);
   return posts;
 }

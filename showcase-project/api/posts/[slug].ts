@@ -4,6 +4,7 @@ import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
 import { fileURLToPath } from 'url';
+import { preprocessMarkdown, postprocessHtml } from '../utils/markdown.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -75,7 +76,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       publishedAt: new Date(data.date),
       createdAt: new Date(data.date),
       updatedAt: new Date(data.date),
-      content: await marked(content)
+      content: postprocessHtml(await marked(preprocessMarkdown(content)))
     };
     
     if (!post.published) {

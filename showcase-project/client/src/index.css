@@ -454,3 +454,253 @@
 .animate-page-entrance {
   animation: page-entrance 0.8s ease-out forwards;
 }
+
+/* ============================================================
+   ENHANCED MARKDOWN RENDERING
+   ============================================================ */
+
+/* --- Code blocks with syntax highlighting --- */
+.prose pre {
+  position: relative;
+  background: #0d1117 !important;
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  padding: 1.25rem 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.prose pre code {
+  background: transparent !important;
+  padding: 0 !important;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+/* Copy button */
+.copy-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.7rem;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  z-index: 10;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+/* --- Callout / alert boxes --- */
+.callout {
+  border-radius: 0.5rem;
+  border-left-width: 4px;
+  border-left-style: solid;
+  padding: 0.875rem 1.1rem;
+  margin: 1.5rem 0;
+}
+
+.callout-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.callout-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: inherit;
+}
+
+/* Note — blue */
+.callout-note {
+  background: hsl(214 100% 97%);
+  border-color: hsl(214 80% 52%);
+  color: hsl(214 60% 25%);
+}
+.dark .callout-note {
+  background: hsl(214 50% 15%);
+  border-color: hsl(214 70% 50%);
+  color: hsl(214 40% 85%);
+}
+
+/* Tip — green */
+.callout-tip {
+  background: hsl(142 60% 96%);
+  border-color: hsl(142 60% 40%);
+  color: hsl(142 50% 20%);
+}
+.dark .callout-tip {
+  background: hsl(142 40% 12%);
+  border-color: hsl(142 55% 42%);
+  color: hsl(142 35% 82%);
+}
+
+/* Important — purple */
+.callout-important {
+  background: hsl(270 60% 97%);
+  border-color: hsl(270 60% 55%);
+  color: hsl(270 50% 25%);
+}
+.dark .callout-important {
+  background: hsl(270 40% 14%);
+  border-color: hsl(270 55% 55%);
+  color: hsl(270 40% 85%);
+}
+
+/* Warning — amber */
+.callout-warning {
+  background: hsl(45 100% 96%);
+  border-color: hsl(38 90% 50%);
+  color: hsl(38 70% 22%);
+}
+.dark .callout-warning {
+  background: hsl(38 60% 12%);
+  border-color: hsl(38 80% 52%);
+  color: hsl(38 60% 85%);
+}
+
+/* Caution — red */
+.callout-caution {
+  background: hsl(0 80% 97%);
+  border-color: hsl(0 72% 52%);
+  color: hsl(0 55% 22%);
+}
+.dark .callout-caution {
+  background: hsl(0 45% 14%);
+  border-color: hsl(0 65% 52%);
+  color: hsl(0 45% 85%);
+}
+
+/* Suppress default blockquote styling when it becomes a callout */
+.prose .callout {
+  font-style: normal;
+  border-left-width: 4px;
+}
+
+/* --- Highlighted / marked text --- */
+.prose mark {
+  background: hsl(50 100% 75%);
+  color: hsl(38 70% 15%);
+  border-radius: 0.2em;
+  padding: 0.05em 0.2em;
+}
+.dark .prose mark {
+  background: hsl(45 85% 38%);
+  color: hsl(45 80% 96%);
+}
+
+/* --- Tables --- */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  overflow-x: auto;
+  display: block;
+}
+
+.prose thead {
+  background: hsl(var(--muted));
+}
+
+.prose th {
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+.prose td {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  vertical-align: top;
+}
+
+.prose tbody tr:nth-child(even) {
+  background: hsl(var(--muted) / 0.4);
+}
+
+.prose tbody tr:hover {
+  background: hsl(var(--accent) / 0.4);
+}
+
+/* --- Collapsible sections (<details> / <summary>) --- */
+.prose details {
+  border: 1px solid hsl(var(--border));
+  border-radius: 0.5rem;
+  margin: 1.25rem 0;
+  overflow: hidden;
+}
+
+.prose summary {
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  background: hsl(var(--muted) / 0.5);
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: hsl(var(--foreground));
+  transition: background 0.15s;
+}
+
+.prose summary::before {
+  content: '▶';
+  font-size: 0.7em;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.prose details[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.prose summary::-webkit-details-marker {
+  display: none;
+}
+
+.prose summary:hover {
+  background: hsl(var(--muted));
+}
+
+.prose details > *:not(summary) {
+  padding: 0 1rem;
+}
+
+.prose details > *:not(summary):last-child {
+  padding-bottom: 0.75rem;
+}
+
+/* --- Math blocks & inline --- */
+.math-block {
+  overflow-x: auto;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.math-inline {
+  display: inline;
+}
+
+/* KaTeX overrides for theme compatibility */
+.dark .katex {
+  color: hsl(var(--foreground));
+}

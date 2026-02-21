@@ -67,6 +67,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           tags: data.tags || [],
           category: data.category || 'General',
           published: data.published !== false,
+          hidden: data.hidden === true,
           featured: data.featured || false,
           publishedAt: new Date(data.date),
           createdAt: new Date(data.date),
@@ -74,7 +75,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           content
         };
       })
-      .filter(post => post.published);
+      .filter(post => post.published && !post.hidden);
 
     // If this is a search request, filter posts based on query
     if (isSearch) {

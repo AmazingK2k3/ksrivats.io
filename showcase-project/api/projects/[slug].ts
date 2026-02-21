@@ -5,6 +5,7 @@ import matter from 'gray-matter';
 import { marked } from 'marked';
 import { fileURLToPath } from 'url';
 import { resolveImagePath } from '../utils/assets.js';
+import { preprocessMarkdown, postprocessHtml } from '../utils/markdown.js';
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -80,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       order: data.order || 0,
       createdAt: new Date(data.date || Date.now()),
       updatedAt: new Date(data.date || Date.now()),
-      content: await marked(content)
+      content: postprocessHtml(await marked(preprocessMarkdown(content)))
     };
     
     res.json(project);

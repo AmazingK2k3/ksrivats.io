@@ -70,12 +70,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           github: data.github || data.githubUrl,
           live: data.liveUrl,
           featured: data.featured || false,
+          hidden: data.hidden === true,
           order: data.order || 0,
           createdAt: new Date(data.date || Date.now()),
           updatedAt: new Date(data.date || Date.now()),
           content
         };
       })
+      .filter(p => !p.hidden)
       .sort((a, b) => b.order - a.order);
 
     // If this is a featured projects request, filter for featured projects

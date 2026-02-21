@@ -1,5 +1,9 @@
 import { useRef, useEffect, useState, useCallback, useMemo } from "react";
 import { CitationCard, type Citation } from "./citation-card";
+import hljs from "highlight.js";
+import katex from "katex";
+import "highlight.js/styles/github-dark.css";
+import "katex/dist/katex.min.css";
 
 interface CitationProcessorProps {
   htmlContent: string;
@@ -193,6 +197,55 @@ export function CitationProcessor({ htmlContent, className }: CitationProcessorP
     setPinnedCitation(null);
     setActiveCitation(null);
   }, []);
+
+  // Syntax highlighting + copy buttons + KaTeX after each render
+  useEffect(() => {
+    const container = contentRef.current;
+    if (!container) return;
+
+    // --- Syntax highlighting ---
+    container.querySelectorAll("pre code").forEach((block) => {
+      if (!(block as HTMLElement).dataset.highlighted) {
+        hljs.highlightElement(block as HTMLElement);
+      }
+    });
+
+    // --- Copy buttons on <pre> blocks ---
+    container.querySelectorAll("pre").forEach((pre) => {
+      if (pre.querySelector(".copy-btn")) return; // already added
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.textContent = "Copy";
+      btn.addEventListener("click", () => {
+        const code = pre.querySelector("code")?.innerText || "";
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy"), 2000);
+        });
+      });
+      pre.style.position = "relative";
+      pre.appendChild(btn);
+    });
+
+    // --- KaTeX math rendering ---
+    container.querySelectorAll(".math-block[data-math]").forEach((el) => {
+      const encoded = el.getAttribute("data-math") || "";
+      try {
+        const expr = atob(encoded);
+        el.innerHTML = katex.renderToString(expr, { displayMode: true, throwOnError: false });
+        el.removeAttribute("data-math");
+      } catch {}
+    });
+
+    container.querySelectorAll(".math-inline[data-math]").forEach((el) => {
+      const encoded = el.getAttribute("data-math") || "";
+      try {
+        const expr = atob(encoded);
+        el.innerHTML = katex.renderToString(expr, { displayMode: false, throwOnError: false });
+        el.removeAttribute("data-math");
+      } catch {}
+    });
+  }, [processedHtml]);
 
   const displayNum = pinnedCitation ?? activeCitation;
   const activeCitationData = citations.find((c) => c.number === displayNum);
