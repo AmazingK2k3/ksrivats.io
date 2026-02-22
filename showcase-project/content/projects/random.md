@@ -6,7 +6,7 @@ tags: ["UI/UX", "mobile-design", "cryptocurrency", "fintech", "case-study", "use
 category: "Design"
 excerpt: "A comprehensive UX case study for a beginner-friendly cryptocurrency exchange mobile application focused on education and ease of use."
 description: "This application offers a beginner-friendly user experience that offers tutorials and tasks and offer simple free crypto coins for the user to learn about the world of cryptocurrency. The app will use easy-to-understand tools and features and will guide the user in their cryptocurrency journey."
-featured: true
+featured: false
 status: "completed"
 tech_stack: ["UI/UX Design", "User Research", "Wireframing", "Prototyping", "User Journey Mapping"]
 cover: "/coinview.png"

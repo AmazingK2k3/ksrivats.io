@@ -6,7 +6,7 @@ tags: ["data-analysis", "machine-learning", "python", "network-security", "forec
 category: "Data Science"
 excerpt: "A collection of data analysis and forecasting projects focusing on network security, traffic classification, and retail analytics."
 description: "Multiple data analysis projects performed as part of coursework, including threat classification, intrusion detection, network traffic analysis, and forecasting models."
-featured: true
+featured: false
 status: "completed"
 tech_stack: ["Python", "Pandas", "Scikit-learn", "Random Forest", "ARIMA", "Isolation Forest", "EDA"]
 cover: "/data_projects.png"

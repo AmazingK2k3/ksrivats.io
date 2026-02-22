@@ -298,6 +298,8 @@
   border-color: hsl(var(--border));
   max-width: 220px;
   font-size: 0.8rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .citation-card-pinned {
@@ -522,6 +524,13 @@
 .callout-body {
   font-size: 0.9rem;
   line-height: 1.6;
+}
+
+.callout-body > p:first-child { margin-top: 0; }
+.callout-body > p:last-child  { margin-bottom: 0; }
+
+.callout-body-unused {
+  /* placeholder to avoid empty rule lint warning */
   color: inherit;
 }
 

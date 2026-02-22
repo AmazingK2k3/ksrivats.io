@@ -9,7 +9,7 @@ description: "Modular evaluation toolkit that benchmarks document parsers (Docli
 featured: true
 status: "completed"
 tech_stack: ["Python", "AWS Bedrock", "Claude 3.5 Sonnet", "Docling", "Marker", "PyMuPDF", "LlamaParse"]
-cover: "/design.png"
+cover: "/project-images/parser-evals/cover.png"
 links:
   - type: "github"
     url: "https://github.com/AmazingK2k3/Parser_evals"
@@ -18,7 +18,7 @@ links:
 
 ## Overview
 
-A comprehensive toolkit for assessing document parsing libraries across multiple formats (PDF, DOCX, PPTX, etc.), leveraging LLM-based evaluation to help users select the most suitable parser for their specific use case.
+A comprehensive toolkit for assessing document parsing libraries across multiple formats (PDF, DOCX, PPTX, etc.), leveraging LLM-based evaluation to help users select the most suitable parser for their specific use case. This project was a branch off from the RAG Pipeline Evals repository, focusing specifically on evaluating document parsing libraries using similar principles and methodologies. While RAG seems simple at start and each parser may seem to be doing a good job, the reality is that there are many edge cases and nuances in document parsing that can significantly impact RAG performance especially in production and real world applications. This toolkit provides a systematic way to evaluate and compare different parsers across various document formats, using a combination of text-based, vision-enhanced, and LLM judge evaluation methods. The goal is to provide users with actionable insights into the strengths and weaknesses of each parser, helping them make informed decisions about which one to use for their specific needs. The code is modular and configuration-driven, allowing for easy experimentation and benchmarking across different parsing solutions and evaluation methods. Hope you can check out the project yourself and provide feedback on how to improve it!
 
 ## Evaluation Methods
 

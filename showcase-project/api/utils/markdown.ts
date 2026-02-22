@@ -30,18 +30,81 @@ export function preprocessMarkdown(md: string): string {
   return md;
 }
 
+/**
+ * Post-process HTML output from remark/marked.
+ * Handles: GitHub-style callout blockquotes (iterative, nesting-safe)
+ * and heading id injection for anchor link support.
+ */
 export function postprocessHtml(html: string): string {
-  html = html.replace(
-    /<blockquote>\s*<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n?([\s\S]*?)<\/p>\s*<\/blockquote>/gi,
-    (_, type, content) => {
-      const t = CALLOUT_TYPES[type.toUpperCase()];
-      if (!t) return _;
-      const body = content.trim().replace(/\n/g, '<br>');
-      return `<div class="callout ${t.cls}">
-  <div class="callout-title">${t.icon} ${t.label}</div>
-  <div class="callout-body">${body}</div>
-</div>`;
+  let result = '';
+  let i = 0;
+
+  while (i < html.length) {
+    const blockStart = html.indexOf('<blockquote>', i);
+    if (blockStart === -1) {
+      result += html.slice(i);
+      break;
+    }
+
+    result += html.slice(i, blockStart);
+
+    let depth = 1;
+    let j = blockStart + 12;
+
+    while (j < html.length && depth > 0) {
+      const nextOpen  = html.indexOf('<blockquote>', j);
+      const nextClose = html.indexOf('</blockquote>', j);
+
+      if (nextClose === -1) { depth = -1; break; }
+
+      if (nextOpen !== -1 && nextOpen < nextClose) {
+        depth++;
+        j = nextOpen + 12;
+      } else {
+        depth--;
+        j = nextClose + 13;
+      }
+    }
+
+    if (depth !== 0) {
+      result += html.slice(blockStart);
+      break;
+    }
+
+    const blockEnd = j;
+    const inner = html.slice(blockStart + 12, blockEnd - 13);
+
+    const typeMatch = inner.match(/^\s*<p>\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n?/i);
+    if (typeMatch) {
+      const type = typeMatch[1].toUpperCase();
+      const t = CALLOUT_TYPES[type];
+      if (t) {
+        const body = inner
+          .replace(/^\s*<p>\[!(?:NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\n?/i, '<p>')
+          .trim();
+        result += `<div class="callout ${t.cls}">\n  <div class="callout-title">${t.icon} ${t.label}</div>\n  <div class="callout-body">${body}</div>\n</div>`;
+        i = blockEnd;
+        continue;
+      }
+    }
+
+    result += html.slice(blockStart, blockEnd);
+    i = blockEnd;
+  }
+
+  return injectHeadingIds(result);
+}
+
+function injectHeadingIds(html: string): string {
+  return html.replace(
+    /<(h[1-6])>([\s\S]*?)<\/\1>/g,
+    (match, tag, content) => {
+      const text = content.replace(/<[^>]+>/g, '');
+      const id = text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-');
+      return `<${tag} id="${id}">${content}</${tag}>`;
     }
   );
-  return html;
 }

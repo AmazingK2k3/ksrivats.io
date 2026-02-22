@@ -20,13 +20,13 @@ export function AboutSection() {
     {
       icon: Code,
       title: "Tech Focus",
-      description: "Mech Interp, VLMs, RAG, Ai Dev, Graph Neural Networks, Tech Policy",
+      description: "Mech Interp, Eval-Awareness, Activation Steering & Probing, RAG, Graph Neural Networks",
       color: "from-primary/30 to-primary/40",
     },
     {
       icon: Heart,
       title: "Current Interests",
-      description: "Responsible AI & AI Safety, Geopolitics, Economics, Institutions, Understanding People & Power",
+      description: "AI Safety, Gradual Disempowerment, Catastrophic Risks by AI, Defensive Acceleration of Empowering Technology, Understanding People & Power",
       color: "from-accent/30 to-accent/40",
     },
 
@@ -42,10 +42,10 @@ export function AboutSection() {
             </h2>
             <div className="prose prose-lg text-muted-foreground space-y-4">
               <p>
-                I'm a researcher, builder, and explorer working at the intersection of AI, institutions, and society. Currently at <strong className="text-foreground">Siemens</strong>, I work as an AI engineer developing VLM, RAG, and Computer Vision applications for industrial automation.
+                I'm a researcher, builder, explorer and an artist working at the intersection of AI, institutions, and society. Currently at <strong className="text-foreground">Siemens</strong>, I work as an AI engineer developing VLM, RAG, and Gen AI applications for industrial automation.
               </p>
               <p>
-                Beyond engineering, I'm passionate about research across diverse domains—from responsible AI and tech policy to geopolitics and understanding how technology shapes human connection. I co-founded <strong className="text-foreground">Zeitgeist</strong>, an IR journal, and love connecting with people from different backgrounds to challenge my assumptions.
+                Beyond work, I'm currently passionate about research across the field of AI Safety, Gradual disempowerment and technologies that can empower people in the post-AGI era. I generally love to think about complex problems and circumstances, keeping people at the center. I co-founded <strong className="text-foreground">Zeitgeist</strong>, an IR journal, and love connecting with people from different backgrounds to challenge my assumptions. I also write essays on my personal blog about AI, Geopolitics and other topics that I find interesting.
               </p>
               <div className="pt-2">
                 <Link href="/about" className="text-primary font-medium hover:underline">

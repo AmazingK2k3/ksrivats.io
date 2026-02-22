@@ -69,7 +69,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       id: 1,
       title: data.title,
       slug: data.slug || projectFile.replace('.md', ''),
-      description: data.description || content.substring(0, 200) + '...',
+      description: data.description || data.excerpt || content.substring(0, 200) + '...',
       tags: data.tags || [],
       tech: data.tech || data.tech_stack || [],
       status: data.status || 'completed',

@@ -9,16 +9,16 @@ description: "Modular RAG evaluation framework that enables systematic benchmark
 featured: true
 status: "completed"
 tech_stack: ["Python", "AWS Bedrock", "FAISS", "ChromaDB", "RAGAS", "LangChain", "HuggingFace", "OpenAI"]
-cover: "/design.png"
+cover: "/project-images/rag-pipeline-evals/cover.png"
 links:
   - type: "github"
     url: "https://github.com/AmazingK2k3/RAG_Pipeline_Evals"
     label: "View on GitHub"
 ---
 
-## Overview
+## Brief
 
-A configuration-driven RAG evaluation framework built for systematic testing, benchmarking, and optimization of RAG pipelines. The framework enables modular combinations across six primary pipeline stages, allowing you to test different configurations and measure performance using standardized metrics.
+A configuration-driven RAG evaluation framework built for systematic testing, benchmarking, and optimization of RAG pipelines. The framework enables modular combinations across six primary pipeline stages, allowing you to test different configurations and measure performance using standardized metrics. This project was started as part of my work to explore different RAG  methodologies out there and figure out which are actually effective and reliable to be used in production level environments. Each stage of the rag pipeline has multiple interchangeable methods that can be easily swapped out and tested against each other. The evaluation is done using the RAGAS framework, which provides a comprehensive set of metrics to assess the performance of the entire pipeline. The idea is instead of determining performance results from external sources, any user of this repository can simply add new methods from RAG by themselves and test the ideal combination suitable for their particular use case. The code is modular and configuration-driven, allowing for easy experimentation and benchmarking across different RAG components and evaluation methods. A derivative from this project is the Parser Evals repository, which focuses specifically on evaluating document parsing libraries using similar principles and methodologies. Hope to hear your feedback regarding this repository!
 
 ## Architecture
 

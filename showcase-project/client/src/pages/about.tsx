@@ -12,7 +12,7 @@ export default function About() {
     {
       icon: Brain,
       title: "Current Role",
-      description: "Gen AI R&D at Siemens - Building VLMs, RAG systems, and Computer Vision applications",
+      description: "Gen AI R&D at Siemens - Building VLMs, RAG systems, and Gen AI applications",
       color: "from-primary/20 to-primary/30",
     },
     {
@@ -24,13 +24,13 @@ export default function About() {
     {
       icon: Globe,
       title: "Current Exploration",
-      description: "Oversquashing on GNNs, Building & Scaling AI/RAG Applications, Responsible AI, AI's impact on institutions, Geopolitics, Economics, and more.",
+      description: "AI Safety, Gradual Disempowerment, Catastrophic Risks by AI, Oversquashing on GNNs, Building & Scaling AI/RAG Applications, Responsible AI,  Geopolitics,  and more.",
       color: "from-primary/30 to-primary/40",
     },
     {
       icon: Users,
       title: "People & Commmunity",
-      description: "Currently Seeking to be part of and build communities, and volunteer for causes!",
+      description: "Currently Seeking to be part of and build communities, and volunteer for causes! I want to work with people at groundroot levels from different backgrounds and perspectives to learn and grow together.",
       color: "from-accent/30 to-accent/40",
     },
     {
@@ -102,6 +102,9 @@ export default function About() {
                 </p>
                 <p className="text-muted-foreground mb-6">
                   Beyond my current role, I've explored various paths: analyzing competition data at <strong className="text-foreground">e-Yantra, IIT Bombay</strong> (published at T4E 2024), designing a cryptocurrency learning app as a UX intern at Cabot Technology Solutions, and currently experimenting with solving the Over-Squashing Problem in Graph Neural Networks. I also co-founded and helped in designing <strong className="text-foreground">Zeitgeist</strong>, an IR journal exploring war and collective memory, and served as Student Government President, drafting our university's first student constitution.
+                </p>
+                <p className="text-muted-foreground mb-6">
+                  Over the past year I've gone deep on AI Safety — completing the <strong className="text-foreground">AGI Strategy</strong> course, the <strong className="text-foreground">Technical AI Safety</strong> course and project sprint with BlueDot Impact (where the eval-awareness study was my sprint project), and the <strong className="text-foreground">AI Safety, Ethics &amp; Society</strong> course from the Center for AI Safety (the Disempowerment Dilemma essay was my submission for that). What I keep returning to is a question that feels more urgent the more I look at it: <em>what happens to people's sense of agency and meaning when automation displaces not just their jobs but the kinds of work that gave them purpose?</em> I care deeply about preserving human agency — not just as a policy problem, but as something worth building towards. I also want to become more consistent in my writing and get back to making art, because I think staying creative is part of how I stay honest about why any of this matters.
                 </p>
                 <p className="text-muted-foreground mb-6">
                   When I'm not engineering or researching, you'll find me reading philosophy, sketching, solving Rubik's cubes, or watching anime :) I'm passionate about connecting with people from diverse backgrounds, always open to new perspectives. As Steve Jobs once said, I'm on a path of exploration, figuring out what I truly love—and I think that's a constant work in progress, just like life itself.
@@ -228,12 +231,14 @@ export default function About() {
               <h2 className="text-2xl font-sans font-bold mb-6">Current Interests</h2>
               <div className="flex flex-wrap gap-2">
                 {[
-                  "AI Research",
-                  "Responsible AI",
-                  "Tech & Public Policy",
+                  "AI Safety",
+                  "Gradual Disempowerment",
                   "Geopolitics",
                   "International Relations",
                   "Mechanistic Interpretability",
+                  "Evaluation Awareness",
+                  "Activation Steering & Probing",
+                  "Pursuing art and writing",
                   "Economics & Financial Markets",
                   "Product Management & Product Design",
                   "Startups & Startup Ecosystem",
@@ -251,7 +256,7 @@ export default function About() {
           <div className="text-center">
             <h2 className="text-3xl font-sans font-bold mb-6">Let's Connect</h2>
             <p className="text-xl text-muted-foreground mb-8">
-              If you're into Research, tech policy, geopolitics, institutions, cinema, anime, community work, or just fun banter—let's connect and explore ideas together.
+              If you could relate to any of the interests I talked above or just looking for fun banter—let's connect and explore ideas together.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild size="lg">

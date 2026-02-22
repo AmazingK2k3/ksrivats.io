@@ -10,6 +10,7 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { Comments } from "@/components/comments";
 import { Upvotes } from "@/components/upvotes";
+import { CitationProcessor } from "@/components/citation-processor";
 
 interface Project {
   id: number;
@@ -194,7 +195,7 @@ export default function ProjectPage() {
           </div>
           {/* Post Content */}
           <div className="prose prose-lg max-w-none mb-16">
-            <div dangerouslySetInnerHTML={{ __html: project.content }} />
+            <CitationProcessor htmlContent={project.content} />
           </div>
 
           {/* Upvotes */}
