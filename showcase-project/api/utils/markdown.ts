@@ -92,7 +92,30 @@ export function postprocessHtml(html: string): string {
     i = blockEnd;
   }
 
-  return injectHeadingIds(result);
+  return injectHeadingIds(rewriteProjectImageSrcs(result));
+}
+
+/**
+ * Rewrites src attributes in <img> tags that reference /project-images/...
+ * to their Vite-processed /assets/... equivalents, so images are served directly
+ * from dist/assets/ without needing Vercel routing tricks.
+ */
+function rewriteProjectImageSrcs(html: string): string {
+  // Explicit renames first (cover.png files renamed to avoid Vite [name].[ext] collision)
+  html = html.replace(
+    /src="\/project-images\/parser-evals\/cover\.png"/g,
+    'src="/assets/parser-evals-cover.png"'
+  );
+  html = html.replace(
+    /src="\/project-images\/rag-pipeline-evals\/cover\.png"/g,
+    'src="/assets/rag-pipeline-evals-cover.png"'
+  );
+  // General case: /project-images/subdir/filename.ext → /assets/filename.ext
+  html = html.replace(
+    /src="\/project-images\/[^/]+\/([^"]+)"/g,
+    'src="/assets/$1"'
+  );
+  return html;
 }
 
 function injectHeadingIds(html: string): string {

@@ -1,4 +1,13 @@
 /**
+ * Maps project image paths (as written in markdown frontmatter) to Vite-processed asset URLs.
+ * Files renamed to avoid Vite [name].[ext] collisions are handled explicitly.
+ */
+const PROJECT_IMAGE_RENAMES: Record<string, string> = {
+  '/project-images/parser-evals/cover.png': '/assets/parser-evals-cover.png',
+  '/project-images/rag-pipeline-evals/cover.png': '/assets/rag-pipeline-evals-cover.png',
+};
+
+/**
  * Utility function to resolve image paths for different content types
  * Handles both relative and absolute paths, and maps them to the correct public directory
  */
@@ -10,6 +19,19 @@ export function resolveImagePath(imagePath: string, contentType?: 'project' | 'c
   // If it's already a full URL, return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     return imagePath;
+  }
+
+  // Normalise to have leading slash
+  const normalised = imagePath.startsWith('/') ? imagePath : `/${imagePath}`;
+
+  // Project images are processed by Vite into /assets/ — resolve them directly
+  if (normalised.startsWith('/project-images/')) {
+    if (PROJECT_IMAGE_RENAMES[normalised]) {
+      return PROJECT_IMAGE_RENAMES[normalised];
+    }
+    // General case: /project-images/subdir/filename.ext → /assets/filename.ext
+    const filename = normalised.split('/').pop();
+    if (filename) return `/assets/${filename}`;
   }
 
   // Handle absolute paths that start with /
