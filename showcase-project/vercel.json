@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npx vite build && node scripts/build-asset-manifest.js",
+  "buildCommand": "npx vite build && node scripts/build-asset-manifest.js && node scripts/copy-project-images.js",
   "outputDirectory": "client/dist",
   "functions": {
     "api/**/*.ts": {
@@ -34,22 +34,8 @@
       }
     },
     {
-      "src": "/project-images/parser-evals/cover.png",
-      "dest": "/assets/parser-evals-cover.png",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
-    },
-    {
-      "src": "/project-images/rag-pipeline-evals/cover.png",
-      "dest": "/assets/rag-pipeline-evals-cover.png",
-      "headers": {
-        "Cache-Control": "public, max-age=31536000, immutable"
-      }
-    },
-    {
-      "src": "/project-images/eval-awareness/(.*)",
-      "dest": "/assets/$1",
+      "src": "/project-images/(.*)",
+      "dest": "/project-images/$1",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
       }
