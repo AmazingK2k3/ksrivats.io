@@ -48,7 +48,7 @@
       }
     },
     {
-      "src": "/project-images/[^/]+/([^/]+)",
+      "src": "/project-images/eval-awareness/(.*)",
       "dest": "/assets/$1",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
