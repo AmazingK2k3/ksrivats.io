@@ -13,10 +13,6 @@ showcase-project/node_modules/
 showcase-project/.env
 showcase-project/dist/
 showcase-project/EMAIL_SETUP.md
-# Allow project-images inside showcase (overrides the top-level public/ rule)
-!showcase-project/client/public/
-showcase-project/client/public/*
-!showcase-project/client/public/project-images/
 
 # Development environments
 .replit

@@ -1,4 +1,17 @@
 // Force import all assets to ensure Vite processes them
+
+// Project images
+import evalAwarenessPipeline from '../assets/images/project-images/eval-awareness/pipeline.png';
+import evalAwarenessRq1Metrics from '../assets/images/project-images/eval-awareness/rq1_metrics_comparison.png';
+import evalAwarenessRq1Roc from '../assets/images/project-images/eval-awareness/rq1_roc_comparison.png';
+import evalAwarenessRq1Vs from '../assets/images/project-images/eval-awareness/rq1_vs_rq4_comparison.png';
+import evalAwarenessRq4Rates from '../assets/images/project-images/eval-awareness/rq4_awareness_rates.png';
+import evalAwarenessRq4Table from '../assets/images/project-images/eval-awareness/rq4_metrics_table.png';
+import evalAwarenessRq6Dist from '../assets/images/project-images/eval-awareness/rq6_consistency_distribution.png';
+import evalAwarenessRq6Faking from '../assets/images/project-images/eval-awareness/rq6_faking_rates.png';
+import parserEvalsCover from '../assets/images/project-images/parser-evals-cover.png';
+import ragPipelineEvalsCover from '../assets/images/project-images/rag-pipeline-evals-cover.png';
+
 import logo1752220578130 from '../assets/images/1_1752220578130.png';
 import coinview from '../assets/images/coinview.png';
 import dataProjects from '../assets/images/data_projects.png';
@@ -42,6 +55,18 @@ export const assetUrls = {
   '/logo-main2.png': logoMain2,
   '/zeitgeist.png': zeitgeist,
   
+  // Project images
+  '/project-images/eval-awareness/pipeline.png': evalAwarenessPipeline,
+  '/project-images/eval-awareness/rq1_metrics_comparison.png': evalAwarenessRq1Metrics,
+  '/project-images/eval-awareness/rq1_roc_comparison.png': evalAwarenessRq1Roc,
+  '/project-images/eval-awareness/rq1_vs_rq4_comparison.png': evalAwarenessRq1Vs,
+  '/project-images/eval-awareness/rq4_awareness_rates.png': evalAwarenessRq4Rates,
+  '/project-images/eval-awareness/rq4_metrics_table.png': evalAwarenessRq4Table,
+  '/project-images/eval-awareness/rq6_consistency_distribution.png': evalAwarenessRq6Dist,
+  '/project-images/eval-awareness/rq6_faking_rates.png': evalAwarenessRq6Faking,
+  '/project-images/parser-evals/cover.png': parserEvalsCover,
+  '/project-images/rag-pipeline-evals/cover.png': ragPipelineEvalsCover,
+
   // Creative images (filename only)
   '20210501_010051-01.jpeg': digital20210501,
   '20210602_103142.jpg': character20210602_1,
