@@ -27,15 +27,20 @@ export async function setupVite(app: Express, server: Server) {
   const publicPath = path.resolve(__dirname, "..", "client", "public");
   app.use(express.static(publicPath));
 
-  // Serve project images from their src/assets location (mirrors Vercel routing)
-  const projectImagesPath = path.resolve(__dirname, "..", "client", "src", "assets", "images", "project-images");
-  app.get('/project-images/parser-evals/cover.png', (_req, res) => {
-    res.sendFile(path.resolve(projectImagesPath, 'parser-evals-cover.png'));
-  });
-  app.get('/project-images/rag-pipeline-evals/cover.png', (_req, res) => {
-    res.sendFile(path.resolve(projectImagesPath, 'rag-pipeline-evals-cover.png'));
-  });
-  app.use('/project-images', express.static(projectImagesPath));
+  // Serve project images at /assets/<filename> in dev — mirrors production where
+  // Vite processes them into dist/assets/ and the API returns /assets/<filename> paths.
+  const projectImagesRoot = path.resolve(__dirname, "..", "client", "src", "assets", "images", "project-images");
+  if (fs.existsSync(projectImagesRoot)) {
+    // Root-level files (e.g. parser-evals-cover.png, rag-pipeline-evals-cover.png)
+    app.use('/assets', express.static(projectImagesRoot));
+    // Subdirectory files: flatten to /assets/<filename> (same as Vite's [name].[ext] output)
+    const subdirs = fs.readdirSync(projectImagesRoot, { withFileTypes: true })
+      .filter(d => d.isDirectory())
+      .map(d => d.name);
+    for (const subdir of subdirs) {
+      app.use('/assets', express.static(path.join(projectImagesRoot, subdir)));
+    }
+  }
 
   const serverOptions = {
     middlewareMode: true,
